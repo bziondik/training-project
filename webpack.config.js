@@ -3,6 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const autoprefixer = require('autoprefixer');
 // NODE_ENV not set on process.env https://github.com/webpack/webpack/issues/7074
 // const devMode = process.env.NODE_ENV !== 'production'
 
@@ -47,6 +48,17 @@ module.exports = (env, argv) => {
             },
             {
               loader: "css-loader",
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                plugins: [
+                    autoprefixer({
+                        browsers:['ie >= 8', 'last 4 version']
+                    })
+                ],
+                sourceMap: true
+              }
             },
             {
               loader: "sass-loader",
