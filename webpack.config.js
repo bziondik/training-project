@@ -12,7 +12,7 @@ var path = require('path')
 module.exports = (env, argv) => {  
   const devMode = argv.mode !== 'production'; // solution for devMode
   return {
-    devtool: 'inline-source-map',
+    devtool: devMode ? 'inline-source-map' : 'source-map',
     entry: [
       path.resolve(__dirname, 'client/index.js'),
       path.resolve(__dirname, 'client/stylesheets/main.scss')
