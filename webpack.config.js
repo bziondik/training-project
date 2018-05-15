@@ -4,12 +4,22 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const autoprefixer = require('autoprefixer');
+
+var path = require('path')
 // NODE_ENV not set on process.env https://github.com/webpack/webpack/issues/7074
 // const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = (env, argv) => {  
   const devMode = argv.mode !== 'production'; // solution for devMode
   return {
+    devtool: 'inline-source-map',
+    entry: [
+      path.resolve(__dirname, 'client/index.js'),
+      path.resolve(__dirname, 'client/stylesheets/main.scss')
+    ],
+    output: {
+      path: path.join(__dirname, 'public'),
+    },
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -68,14 +78,14 @@ module.exports = (env, argv) => {
       ]
     },
     plugins: [
-      new CleanWebpackPlugin(['dist']),
+      new CleanWebpackPlugin([path.resolve(__dirname, 'public'),]),
       new HtmlWebPackPlugin({
-        template: "./src/index.html",
+        template: path.resolve(__dirname, 'client/index.html'),
         filename: "./index.html"
       }),
       new MiniCssExtractPlugin({
-        filename: devMode ? '[name].css' : '[name].[hash].css',
-        chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+        filename: devMode ? './css/[name].css' : './css/[name].[hash].css',
+        chunkFilename: devMode ? './css/[id].css' : './css/[id].[hash].css',
       })
     ]
   }
