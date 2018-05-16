@@ -1,11 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom";
-const App = () => {
-  return (
-    <div>
-      <p>React here, Hanna! Good day, today :)</p>
-    </div>
-  );
-};
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
+import createStore from './store';
+import AppRouter from './routers/AppRouter';
+
+const store = createStore();
+
+const App = () => (
+  <BrowserRouter>
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+  </BrowserRouter>
+);
+
 export default App;
-ReactDOM.render(<App />, document.getElementById("app"));
