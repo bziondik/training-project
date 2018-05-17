@@ -6,6 +6,7 @@ import './index.scss';
 
 const FormItem = Form.Item;
 
+/* eslint-disable react/prop-types */
 class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
