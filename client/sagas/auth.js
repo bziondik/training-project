@@ -1,13 +1,13 @@
 import { take, select } from 'redux-saga/effects';
 
-import { authorize, logout } from '../actions/auth';
+import { login, logout } from '../actions/auth';
 import { getIsAuthorized } from '../reducers/auth';
 
-export default function* authFlow() {
+export default function* lofinFlow() {
   while (true) {
     const isAuthorized = yield select(getIsAuthorized);
     if (!isAuthorized) {
-      yield take(authorize);
+      yield take(login);
     }
     yield take(logout);
   }

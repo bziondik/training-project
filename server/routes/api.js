@@ -34,12 +34,15 @@ const createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10),
 // }
 
 router.post('/saveNewUser', (req, res, next) => {
+  console.log('!!!->in route /saveNewUser req=', req);
   User.findOne({ username: req.body.username })
     .then((user) => {
+      console.log('!!!->then findOne user=', user);
       if (user) {
         res.status(400);
         return res.json({ error: 'Пользователь с таким логином уже существует' });
       }
+      console.log('!!!->newUser req.body=', req.body);
       const newUser = new User({
         username: req.body.username,
         password: createHash(req.body.password),
@@ -52,7 +55,7 @@ router.post('/saveNewUser', (req, res, next) => {
             if (err) {
               return next(err);
             }
-            return res.json(savedUser);
+            return res.status(200).json(savedUser);
           });
         })
         .catch(next);
@@ -76,7 +79,7 @@ router.post('/login', (req, res, next) => {
       if (errLogin) {
         return next(errLogin);
       }
-      return res.json(user);
+      return res.status(200).json(user);
     });
   })(req, res, next);
 });
@@ -92,7 +95,7 @@ router.post('/authFromToken', (req, res, next) => {
         if (err) {
           return next(err);
         }
-        return res.json(user);
+        return res.status(200).json(user);
       });
     })
     .catch(next);

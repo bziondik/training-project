@@ -3,5 +3,4 @@ module.exports = {
   apiRoute: '/api',
   serverRoute: '/server',
   publicRoute: 'public',
-  indexRoute: 'views/index.html',
 };

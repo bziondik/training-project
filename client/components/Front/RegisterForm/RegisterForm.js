@@ -1,5 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Tooltip, Icon } from 'antd';
+
+import { signupRequest } from '../../../actions/signup';
 
 const FormItem = Form.Item;
 
@@ -13,6 +16,7 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.signupRequest(values);
       }
     });
   }
@@ -111,8 +115,8 @@ class RegistrationForm extends React.Component {
             </span>
           )}
         >
-          {getFieldDecorator('nickname', {
-            rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+          {getFieldDecorator('username', {
+            rules: [{ required: true, message: 'Please input your username!', whitespace: true }],
           })(<Input />)}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
@@ -122,6 +126,11 @@ class RegistrationForm extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ ...state.signup });
 
-const WrappedRegistrationForm = Form.create()(RegistrationForm);
+const mapDispatchToProps = { signupRequest };
+
+const RegistrationFormConnect = connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
+const WrappedRegistrationForm = Form.create()(RegistrationFormConnect);
+
 export default WrappedRegistrationForm;
