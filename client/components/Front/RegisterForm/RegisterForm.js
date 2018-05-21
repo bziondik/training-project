@@ -1,12 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Form, Input, Button, Tooltip, Icon } from 'antd';
-
-import { signupRequest } from '../../../actions/signup';
+import PropTypes from 'prop-types';
 
 const FormItem = Form.Item;
 
-/* eslint-disable react/prop-types */
+
 class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
@@ -16,7 +14,7 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        this.props.signupRequest(values);
+        this.props.onSubmit(values);
       }
     });
   }
@@ -126,11 +124,13 @@ class RegistrationForm extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({ ...state.signup });
-
-const mapDispatchToProps = { signupRequest };
-
-const RegistrationFormConnect = connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
-const WrappedRegistrationForm = Form.create()(RegistrationFormConnect);
+RegistrationForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    validateFieldsAndScroll: PropTypes.func.isRequired,
+  }).isRequired,
+};
+const WrappedRegistrationForm = Form.create()(RegistrationForm);
 
 export default WrappedRegistrationForm;

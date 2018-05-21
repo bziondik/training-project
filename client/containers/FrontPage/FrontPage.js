@@ -1,10 +1,14 @@
 import React, { PureComponent } from 'react';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Layout, Button, Menu, Modal } from 'antd';
+import PropTypes from 'prop-types';
 
 import FrontRouter from '../../routers/FrontRouter';
 import LoginForm from '../../components/Front/LoginForm';
 import RegisterForm from '../../components/Front/RegisterForm';
+import { signupRequest } from '../../actions/signup';
+import { login } from '../../actions/auth';
 
 
 const { Header, Content, Footer, Sider } = Layout; // eslint-disable-line
@@ -19,24 +23,24 @@ class FrontPage extends PureComponent {
     };
   }
   showLoginModal = () => {
-    this.setState({
-      visibleLoginModal: true,
-    });
+    this.setState({ visibleLoginModal: true });
   }
   handleCancelLoginModal = () => {
-    this.setState({
-      visibleLoginModal: false,
-    });
+    this.setState({ visibleLoginModal: false });
   }
   showRegisterModal = () => {
-    this.setState({
-      visibleRegisterModal: true,
-    });
+    this.setState({ visibleRegisterModal: true });
   }
   handleCancelRegisterModal = () => {
-    this.setState({
-      visibleRegisterModal: false,
-    });
+    this.setState({ visibleRegisterModal: false });
+  }
+  handleSubmitRegisterForm = (data) => {
+    console.log('handleSubmitRegisterForm data=', data);
+    this.props.signupRequest();
+  }
+  handleSubmitLoginForm = (data) => {
+    console.log('handleSubmitLoginForm data=', data);
+    this.props.login();
   }
 
   render() {
@@ -79,7 +83,7 @@ class FrontPage extends PureComponent {
           footer={null}
           width={360}
         >
-          <LoginForm />
+          <LoginForm onSubmit={this.handleSubmitLoginForm} />
         </Modal>
         <Modal
           title="Register"
@@ -88,11 +92,25 @@ class FrontPage extends PureComponent {
           footer={null}
           width={460}
         >
-          <RegisterForm />
+          <RegisterForm onSubmit={this.handleSubmitRegisterForm} />
         </Modal>
       </Layout>
     );
   }
 }
 
-export default FrontPage;
+FrontPage.propTypes = {
+  signupRequest: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+  signup: state.signup,
+});
+
+const mapDispatchToProps = {
+  signupRequest,
+  login,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FrontPage);

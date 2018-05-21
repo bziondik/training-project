@@ -1,18 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import PropTypes from 'prop-types';
 
 import './index.scss';
 
 const FormItem = Form.Item;
 
-/* eslint-disable react/prop-types */
 class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.onSubmit(values);
       }
     });
   }
@@ -45,6 +46,13 @@ class NormalLoginForm extends React.Component {
     );
   }
 }
+NormalLoginForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    validateFields: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
 export default WrappedNormalLoginForm;
