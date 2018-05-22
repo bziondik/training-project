@@ -44,11 +44,11 @@ app.use(express.static(path.join(__dirname.replace(serverConfig.serverRoute, '')
 app.use(session({
   secret: secret.session.secret,
   name: secret.session.name,
-  saveUninitialized: false, // don't start a session before anything is changed
+  saveUninitialized: false,
   httpOnly: true, // only allow http[s] requests to access sessions
   resave: false, // don't save any session unless something is changed
   store: new MongoStore({ // where to save the sessions
-    mongooseConnection: new MongoStore({ mongooseConnection: mongoose.connection }),
+    mongooseConnection: mongoose.connection,
     ttl: secret.session.ttl,
     touchAfter: secret.session.touchAfter,
   }),

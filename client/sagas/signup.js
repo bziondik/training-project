@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, takeLatest } from 'redux-saga/effects';
 
 import { signupRequest, signupSuccess, signupError } from '../actions/signup';
 import requestFlow from './request';
@@ -12,13 +12,15 @@ function signupApi(data) {
 }
 
 function* signupFlow(action) {
-  try {
-    const response = yield call(requestFlow, signupApi, action.payload);
-    console.log('signupFlow call(requestFlow, signupApi, action.payload) response=', response);
-    yield put(signupSuccess(response));
-  } catch (error) {
-    yield put(signupError(error));
-  }
+  yield call(
+    requestFlow,
+    signupApi,
+    {
+      actionSuccess: signupSuccess,
+      actionError: signupError,
+      data: action.payload,
+    },
+  );
 }
 
 

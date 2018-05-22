@@ -23,22 +23,8 @@ const logoutUrl = '/api/logout';
 
 function loginApi(data) {
   console.log('loginApi data=', data);
-  return fetch(
-    loginUrl,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(data),
-    },
-  );
+  return axios.post(loginUrl, data);
 }
-
-// function loginApi(data) {
-//   console.log('loginApi data=', data);
-//   return axios.post(loginUrl, data);
-// }
 function logoutApi(data) {
   console.log('logoutApi data=', data);
   return axios.post(logoutUrl, data);
@@ -46,16 +32,15 @@ function logoutApi(data) {
 
 function* authorize(data) {
   try {
-    console.log('try authorize data=', data);
-    // const user = yield call(testApi, data);
-    const response = yield call(loginApi, data);
-    const user = response.json();
-    console.log('authorize call(loginApi, data) user=', user);
-    // const user = yield call(requestFlow, loginApi, data);
-    // console.log('authorize call(requestFlow, loginApi, data) user=', user);
-    yield put(loginSuccess(user));
-  } catch (error) {
-    yield put(loginError(error));
+    yield call(
+      requestFlow,
+      loginApi,
+      {
+        actionSuccess: loginSuccess,
+        actionError: loginError,
+        data,
+      },
+    );
   } finally {
     if (yield cancelled()) {
       // ... put special cancellation handling code here
@@ -67,16 +52,21 @@ function* authorize(data) {
 function* loginFlow() {
   while (true) {
     const actionLogin = yield take(loginRequest);
-    console.log('loginFlow actionLogin=', actionLogin);
     // fork return a Task object
     const task = yield fork(authorize, actionLogin.payload);
-    console.log('loginFlow fork authorize task=', task);
     const action = yield take([logoutRequest, loginError]);
-    console.log('loginFlow take logoutRequest action=', action);
     if (action.type === logoutRequest) {
       yield cancel(task);
+      yield call(
+        requestFlow,
+        logoutApi,
+        {
+          actionSuccess: logoutSuccess,
+          actionError: logoutError,
+        },
+      );
       try {
-        const response = yield call(requestFlow, logoutApi);
+        const response = yield call(requestFlow, logoutApi, logoutError);
         yield put(logoutSuccess(response));
       } catch (error) {
         yield put(logoutError(error));

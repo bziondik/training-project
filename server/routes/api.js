@@ -36,6 +36,7 @@ router.get('/test', (req, res) => {
   console.log('router.get test');
   return res.status(200).json({ test: true });
 });
+
 router.post('/saveNewUser', (req, res, next) => {
   console.log('!!!->in route /saveNewUser req=', req);
   User.findOne({ username: req.body.username })
@@ -43,7 +44,7 @@ router.post('/saveNewUser', (req, res, next) => {
       console.log('!!!->then findOne user=', user);
       if (user) {
         res.status(400);
-        return res.json({ error: 'Пользователь с таким логином уже существует' });
+        return res.json({ message: 'Пользователь с таким логином уже существует' });
       }
       console.log('!!!->newUser req.body=', req.body);
       const newUser = new User({
@@ -75,7 +76,7 @@ router.post('/login', (req, res, next) => {
     }
     if (!user) {
       res.status(400);
-      return res.json({ error: 'Укажите правильный логин и пароль!' });
+      return res.json({ message: 'Укажите правильный логин и пароль!' });
     }
     console.log('req.body =', req.body);
     if (req.body.remember) {
@@ -101,7 +102,7 @@ router.post('/authFromToken', (req, res, next) => {
     .then((user) => {
       if (!user) {
         res.status(400);
-        return res.json({ error: 'Пользователя с таким токеном не существует!' });
+        return res.json({ message: 'Пользователя с таким токеном не существует!' });
       }
       req.logIn(user, (err) => {
         if (err) {
