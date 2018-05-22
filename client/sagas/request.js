@@ -6,8 +6,9 @@ import { getIsNetworkErrorPresent } from '../reducers/network';
 
 export default function* (fn, args) {
   try {
+    console.log('request fn =', fn);
     const response = yield call(fn, args);
-
+    console.log('request call(fn, args) response=', response);
     if (yield select(getIsNetworkErrorPresent)) yield put(clearNetworkErrors());
 
     return response;

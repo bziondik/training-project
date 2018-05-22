@@ -10,6 +10,14 @@
     "lint": "eslint",
     "server": "nodemon ./server/app.js"
   },
+  "nodemonConfig": {
+    "ignore": ["client/*"]
+  },
+  "devServer": {
+    "watchOptions": {
+        "ignored": "./server/"
+    }
+  },
   "devDependencies": {
     "autoprefixer": "^8.5.0",
     "babel-core": "^6.26.3",

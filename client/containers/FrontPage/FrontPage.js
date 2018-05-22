@@ -8,7 +8,7 @@ import FrontRouter from '../../routers/FrontRouter';
 import LoginForm from '../../components/Front/LoginForm';
 import RegisterForm from '../../components/Front/RegisterForm';
 import { signupRequest } from '../../actions/signup';
-import { login } from '../../actions/auth';
+import { loginRequest } from '../../actions/auth';
 
 
 const { Header, Content, Footer, Sider } = Layout; // eslint-disable-line
@@ -36,11 +36,11 @@ class FrontPage extends PureComponent {
   }
   handleSubmitRegisterForm = (data) => {
     console.log('handleSubmitRegisterForm data=', data);
-    this.props.signupRequest();
+    this.props.signupRequest(data);
   }
   handleSubmitLoginForm = (data) => {
     console.log('handleSubmitLoginForm data=', data);
-    this.props.login();
+    this.props.loginRequest(data);
   }
 
   render() {
@@ -101,7 +101,7 @@ class FrontPage extends PureComponent {
 
 FrontPage.propTypes = {
   signupRequest: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired,
+  loginRequest: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -110,7 +110,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   signupRequest,
-  login,
+  loginRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FrontPage);

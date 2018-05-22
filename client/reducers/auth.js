@@ -10,51 +10,64 @@ import {
 } from '../actions/auth';
 
 const initialState = {
-  isFetching: false,
-  isFetched: false,
+  isLoginFetching: false,
+  isLoginFetched: false,
+  isLogoutFetching: false,
+  isLogoutFetched: false,
   error: null,
-  authorized: false,
+  user: null,
 };
 
 export default handleActions(
   {
     [loginRequest]: state => ({
       ...state,
-      isFetching: true,
-      isFetched: false,
+      isLoginFetching: true,
+      isLoginFetched: false,
     }),
-    [loginSuccess]: state => ({
-      ...state,
-      isFetching: false,
-      isFetched: true,
-      authorized: true,
-    }),
+    [loginSuccess]: (state, action) => {
+      if (state.isLoginFetching) { // if request not cancelled by logout
+        return ({
+          ...state,
+          isLoginFetching: false,
+          isLoginFetched: true,
+          user: action.payload,
+        });
+      }
+      return ({
+        ...state,
+        isLoginFetching: false,
+        isLoginFetched: false,
+        user: null,
+      });
+    },
     [loginError]: (state, action) => ({
       ...state,
-      isFetching: false,
-      isFetched: false,
+      isLoginFetching: false,
+      isLoginFetched: false,
       error: action.payload,
     }),
     [logoutRequest]: state => ({
       ...state,
-      isFetching: true,
-      isFetched: false,
+      isLoginFetching: false, // cancelled login request
+      isLogoutFetching: true,
+      isLogoutFetched: false,
     }),
     [logoutSuccess]: state => ({
       ...state,
-      isFetching: false,
-      isFetched: true,
-      authorized: false,
+      isFetcisLogoutFetchinghing: false,
+      isLogoutFetched: true,
+      user: null,
     }),
     [logoutError]: (state, action) => ({
       ...state,
-      isFetching: false,
-      isFetched: false,
+      isLogoutFetching: false,
+      isLogoutFetched: false,
       error: action.payload,
-      authorized: false,
+      user: null,
     }),
   },
   initialState,
 );
 
-export const getIsAuthorized = state => state.auth.authorized;
+export const getIsAuthorized = state => state.auth.user !== null;

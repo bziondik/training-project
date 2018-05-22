@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import AdminRoute from '../AdminRouter';
 import FrontPage from '../../containers/FrontPage';
 import AdminPage from '../../containers/AdminPage';
-import { logout } from '../../actions/auth';
+import { logoutRequest } from '../../actions/auth';
 import { getIsAuthorized } from '../../reducers/auth';
 import {
   getIsNetworkErrorPresent,
@@ -15,7 +15,7 @@ import {
 
 class AppRouter extends React.Component {
   handleLogout = () => {
-    this.props.logout();
+    this.props.logoutRequest();
   };
 
   render() {
@@ -44,7 +44,7 @@ AppRouter.defaultProps = {
 };
 
 AppRouter.propTypes = {
-  logout: PropTypes.func.isRequired,
+  logoutRequest: PropTypes.func.isRequired,
   authorized: PropTypes.bool.isRequired,
   networkError: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string,
@@ -56,6 +56,6 @@ const mapStateToProps = state => ({
   errorMessage: getNetworkError(state),
 });
 
-const mapDispatchToProps = { logout };
+const mapDispatchToProps = { logoutRequest };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppRouter));

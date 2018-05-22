@@ -32,7 +32,10 @@ const createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10),
 //     return res.json({ error: 'Вы не авторизованы!' });
 //   }
 // }
-
+router.get('/test', (req, res) => {
+  console.log('router.get test');
+  return res.status(200).json({ test: true });
+});
 router.post('/saveNewUser', (req, res, next) => {
   console.log('!!!->in route /saveNewUser req=', req);
   User.findOne({ username: req.body.username })
@@ -64,7 +67,9 @@ router.post('/saveNewUser', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+  console.log('router.post login');
   passport.authenticate('loginUsers', (err, user) => {
+    console.log('passport.authenticate');
     if (err) {
       return next(err);
     }
@@ -72,16 +77,23 @@ router.post('/login', (req, res, next) => {
       res.status(400);
       return res.json({ error: 'Укажите правильный логин и пароль!' });
     }
-    if (req.body.remembered) {
+    console.log('req.body =', req.body);
+    if (req.body.remember) {
       SetCookie(res, user.access_token);
     }
     req.login(user, (errLogin) => {
       if (errLogin) {
         return next(errLogin);
       }
-      return res.status(200).json(user);
+      console.log('login user =', user);
+      return res.status(200).send(user);
     });
   })(req, res, next);
+});
+
+router.post('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
 });
 
 router.post('/authFromToken', (req, res, next) => {
