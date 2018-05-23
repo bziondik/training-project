@@ -15,7 +15,6 @@ export const message = handleActions(
   {
     [clearNetworkErrors]: () => null,
     [networkError]: (state, action) => {
-      console.log('networkError action=', action);
       const { payload: { response } } = action;
       if (response) {
         return response.data.message;

@@ -12,6 +12,14 @@ const path = require('path');
 module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production'; // solution for devMode
   return {
+    devServer: {
+      proxy: {
+        '/api': 'http://localhost:3000', // '*': 'http://[::1]:3000',
+      },
+      watchOptions: {
+        ignored: './server/',
+      },
+    },
     devtool: devMode ? 'inline-source-map' : 'source-map',
     entry: [
       'babel-polyfill',

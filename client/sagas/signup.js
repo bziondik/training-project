@@ -3,9 +3,7 @@ import { call, takeLatest } from 'redux-saga/effects';
 
 import { signupRequest, signupSuccess, signupError } from '../actions/signup';
 import requestFlow from './request';
-
-// TODO !!!The url derived from our .env file
-const signupUrl = '/api/saveNewUser';
+import { signupUrl } from './api';
 
 function signupApi(data) {
   return axios.post(signupUrl, data);

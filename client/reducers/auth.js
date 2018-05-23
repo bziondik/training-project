@@ -12,6 +12,7 @@ import {
 const initialState = {
   isLoginFetching: false,
   isLoginFetched: false,
+  isLoginCanceled: false,
   isLogoutFetching: false,
   isLogoutFetched: false,
   error: null,
@@ -24,9 +25,10 @@ export default handleActions(
       ...state,
       isLoginFetching: true,
       isLoginFetched: false,
+      isLoginCanceled: false,
     }),
     [loginSuccess]: (state, action) => {
-      if (state.isLoginFetching) { // if request not cancelled by logout
+      if (!state.isLoginCanceled) { // if request not cancelled by logout
         return ({
           ...state,
           isLoginFetching: false,
@@ -36,6 +38,7 @@ export default handleActions(
       }
       return ({
         ...state,
+        isLoginCanceled: false,
         isLoginFetching: false,
         isLoginFetched: false,
         user: null,
@@ -49,13 +52,14 @@ export default handleActions(
     }),
     [logoutRequest]: state => ({
       ...state,
+      isLoginCanceled: state.isLoginFetching, // cancelled login request
       isLoginFetching: false, // cancelled login request
       isLogoutFetching: true,
       isLogoutFetched: false,
     }),
     [logoutSuccess]: state => ({
       ...state,
-      isFetcisLogoutFetchinghing: false,
+      isLogoutFetching: false,
       isLogoutFetched: true,
       user: null,
     }),

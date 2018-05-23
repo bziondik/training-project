@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, put, take, cancel, fork, cancelled } from 'redux-saga/effects';
+import { call, take, cancel, fork, cancelled, put } from 'redux-saga/effects';
 
 import {
   loginRequest,
@@ -10,11 +10,8 @@ import {
   logoutError,
 } from '../actions/auth';
 import requestFlow from './request';
-
-// TODO !!!The url derived from our .env file
-const loginUrl = '/api/login';
-const logoutUrl = '/api/logout';
-
+import { loginUrl, logoutUrl } from './api';
+import { signupSuccess } from '../actions/signup';
 // function testApi(data) {
 //   console.log('testApi data=', data);
 //   return axios.get('http://localhost:3000/api/test');
@@ -25,22 +22,26 @@ function loginApi(data) {
   console.log('loginApi data=', data);
   return axios.post(loginUrl, data);
 }
-function logoutApi(data) {
-  console.log('logoutApi data=', data);
-  return axios.post(logoutUrl, data);
+function logoutApi() {
+  console.log('logoutApi');
+  return axios.post(logoutUrl);
 }
 
-function* authorize(data) {
+function* authorize(actionLogin) {
   try {
-    yield call(
-      requestFlow,
-      loginApi,
-      {
-        actionSuccess: loginSuccess,
-        actionError: loginError,
-        data,
-      },
-    );
+    if (actionLogin.type === loginRequest.toString()) {
+      yield call(
+        requestFlow,
+        loginApi,
+        {
+          actionSuccess: loginSuccess,
+          actionError: loginError,
+          data: actionLogin.payload,
+        },
+      );
+    } else { // signupSuccess
+      yield put(loginSuccess(actionLogin.payload));
+    }
   } finally {
     if (yield cancelled()) {
       // ... put special cancellation handling code here
@@ -51,11 +52,11 @@ function* authorize(data) {
 
 function* loginFlow() {
   while (true) {
-    const actionLogin = yield take(loginRequest);
+    const actionLogin = yield take([loginRequest, signupSuccess]);
     // fork return a Task object
-    const task = yield fork(authorize, actionLogin.payload);
+    const task = yield fork(authorize, actionLogin);
     const action = yield take([logoutRequest, loginError]);
-    if (action.type === logoutRequest) {
+    if (action.type === logoutRequest.toString()) {
       yield cancel(task);
       yield call(
         requestFlow,
@@ -65,12 +66,6 @@ function* loginFlow() {
           actionError: logoutError,
         },
       );
-      try {
-        const response = yield call(requestFlow, logoutApi, logoutError);
-        yield put(logoutSuccess(response));
-      } catch (error) {
-        yield put(logoutError(error));
-      }
     }
   }
 }
