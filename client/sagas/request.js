@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 
 import { clearNetworkErrors, networkError } from '../actions/network';
-import { logout } from '../actions/auth';
+import { logoutRequest } from '../actions/auth';
 import { getIsNetworkErrorPresent } from '../reducers/network';
 
 export default function* (fn, settings) {
@@ -20,15 +20,14 @@ export default function* (fn, settings) {
     }
     return response.data;
   } catch (error) {
-    if (settings && settings.actionError) {
-      if (error && error.data && error.data.message) {
-        yield put(settings.actionError(error.data.message));
-        return error;
+    if (error.response && error.response.data && error.response.data.message) {
+      if (settings && settings.actionError) {
+        yield put(settings.actionError(error.response.data.message));
       }
+      yield put(networkError(error));
     }
-    yield put(networkError(error));
 
-    if (error.response.status === 401) yield put(logout());
+    if (error.response.status === 401) yield put(logoutRequest());
 
     return error;
   }

@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import PropTypes from 'prop-types';
 
-import './index.scss';
-
 const FormItem = Form.Item;
 
 class NormalLoginForm extends React.Component {

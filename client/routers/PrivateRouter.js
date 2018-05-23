@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getIsAuthorized } from '../../reducers/auth';
+import { getIsAuthorized } from '../reducers/auth';
 
 class AdminRouter extends React.PureComponent {
   render() {
@@ -22,7 +22,7 @@ class AdminRouter extends React.PureComponent {
 
 AdminRouter.propTypes = {
   authorized: PropTypes.bool.isRequired,
-  component: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  component: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 export default connect(state => ({

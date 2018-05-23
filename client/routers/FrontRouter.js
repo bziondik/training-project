@@ -1,10 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import MainPage from '../../components/Front/MainPage';
-import AboutPage from '../../components/Front/AboutPage';
-import ExamplesPage from '../../components/Front/ExamplesPage';
-import LoginForm from '../../components/Front/LoginForm';
+import MainPage from '../components/Front/MainPage';
+import AboutPage from '../components/Front/AboutPage';
+import ExamplesPage from '../components/Front/ExamplesPage';
+import LoginForm from '../components/Front/LoginForm';
 
 const FrontRouter = () => (
   <Switch>

@@ -2,29 +2,34 @@ import React from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { message } from 'antd';
 
-import AdminRoute from '../AdminRouter';
-import FrontPage from '../../containers/FrontPage';
-import AdminPage from '../../containers/AdminPage';
-import { logoutRequest } from '../../actions/auth';
+import PrivateRouter from './PrivateRouter';
+import FrontPage from '../containers/Front/FrontPage';
+import AdminPage from '../containers/Admin/AdminPage';
+import { clearNetworkErrors } from '../actions/network';
 import {
   getIsNetworkErrorPresent,
   getNetworkError,
-} from '../../reducers/network';
+} from '../reducers/network';
 
 class AppRouter extends React.Component {
-  render() {
-    const { networkError, errorMessage } = this.props;
+  componentDidUpdate(prevProps) {
+    if (!prevProps.networkError && this.props.networkError) {
+      message.error(this.props.errorMessage);
+      this.props.clearNetworkErrors();
+    }
+  }
 
+  render() {
     return (
-      <div className="container">
-        {networkError && <div className="error">{errorMessage}</div>}
+      <React.Fragment>
         <Switch>
-          <AdminRoute path="/admin" component={AdminPage} />
+          <PrivateRouter path="/admin" component={AdminPage} />
           <Route path="/" component={FrontPage} />
           <Redirect to="/" />
         </Switch>
-      </div>
+      </React.Fragment>
     );
   }
 }
@@ -36,6 +41,7 @@ AppRouter.defaultProps = {
 AppRouter.propTypes = {
   networkError: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string,
+  clearNetworkErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -43,6 +49,6 @@ const mapStateToProps = state => ({
   errorMessage: getNetworkError(state),
 });
 
-const mapDispatchToProps = { logoutRequest };
+const mapDispatchToProps = { clearNetworkErrors };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppRouter));
