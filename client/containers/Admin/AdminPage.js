@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Layout, Menu } from 'antd';
 
 import Page from '../../components/Common/Page';
@@ -8,7 +10,7 @@ import AdminRouter from '../../routers/AdminRouter';
 
 const { Header, Content, Footer, Sider } = Layout; // eslint-disable-line
 
-const adminMenu = (
+const adminMenu = isAdmin => (
   <Menu
     theme="dark"
     mode="inline"
@@ -16,7 +18,7 @@ const adminMenu = (
     <Menu.Item key="1"><NavLink to="/admin/create">New Calculator</NavLink></Menu.Item>
     <Menu.Item key="2"><NavLink to="/admin/list">My Calculators</NavLink></Menu.Item>
     <Menu.Item key="3"><NavLink to="/admin/templates">Templates</NavLink></Menu.Item>
-    <Menu.Item key="4"><NavLink to="/admin/users">Users</NavLink></Menu.Item>
+    {isAdmin && <Menu.Item key="4"><NavLink to="/admin/users">Users</NavLink></Menu.Item> }
   </Menu>
 );
 
@@ -28,6 +30,23 @@ const adminRouter = (
   <AdminRouter />
 );
 
-const FrontPage = () => Page(adminMenu, adminHeader, adminRouter);
+class AdminPage extends React.PureComponent {
+  render() {
+    return Page(adminMenu(this.props.user && this.props.user.isAdmin), adminHeader, adminRouter);
+  }
+}
+AdminPage.defaultProps = {
+  user: null,
+};
 
-export default FrontPage;
+AdminPage.propTypes = {
+  user: PropTypes.shape({
+    isAdmin: PropTypes.bool,
+  }),
+};
+
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(AdminPage);

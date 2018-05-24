@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, take, cancel, fork, cancelled, put } from 'redux-saga/effects';
+import { call, take, cancel, fork, cancelled, put, select } from 'redux-saga/effects';
 
 import {
   loginRequest,
@@ -10,13 +10,14 @@ import {
   logoutError,
 } from '../actions/auth';
 import requestFlow from './request';
-import { loginUrl, logoutUrl } from './api';
+import { loginUrl, logoutUrl, authFromTokenUrl } from './api';
 import { signupSuccess } from '../actions/signup';
-// function testApi(data) {
-//   console.log('testApi data=', data);
-//   return axios.get('http://localhost:3000/api/test');
-//   // return fetch('/api/test');
-// }
+import { getIsAuthorized, getUserToken } from '../reducers/auth';
+import {
+  getTokenFromLocalStorage,
+  setTokenToLocalStorage,
+  removeTokenFromLocalStorage,
+} from '../localStorage';
 
 function loginApi(data) {
   console.log('loginApi data=', data);
@@ -25,6 +26,10 @@ function loginApi(data) {
 function logoutApi() {
   console.log('logoutApi');
   return axios.post(logoutUrl);
+}
+function authFromTokenApi() {
+  console.log('authFromTokenApi');
+  return axios.post(authFromTokenUrl);
 }
 
 function* authorize(actionLogin) {
@@ -42,6 +47,8 @@ function* authorize(actionLogin) {
     } else { // signupSuccess
       yield put(loginSuccess(actionLogin.payload));
     }
+    const token = yield select(getUserToken);
+    yield call(setTokenToLocalStorage, token);
   } finally {
     if (yield cancelled()) {
       // ... put special cancellation handling code here
@@ -52,12 +59,34 @@ function* authorize(actionLogin) {
 
 function* loginFlow() {
   while (true) {
-    const actionLogin = yield take([loginRequest, signupSuccess]);
-    // fork return a Task object
-    const task = yield fork(authorize, actionLogin);
+    const isAuthorized = yield select(getIsAuthorized);
+    const localStorageToken = yield call(getTokenFromLocalStorage);
+    let task;
+
+    if (!isAuthorized) {
+      if (localStorageToken) {
+        const token = localStorageToken;
+        yield call(
+          requestFlow,
+          authFromTokenApi,
+          {
+            actionSuccess: loginSuccess,
+            actionError: loginError,
+            data: { access_token: token },
+          },
+        );
+      } else {
+        const actionLogin = yield take([loginRequest, signupSuccess]);
+        // fork return a Task object
+        task = yield fork(authorize, actionLogin);
+      }
+    }
     const action = yield take([logoutRequest, loginError]);
     if (action.type === logoutRequest.toString()) {
-      yield cancel(task);
+      if (task) {
+        yield cancel(task);
+      }
+      yield call(removeTokenFromLocalStorage);
       yield call(
         requestFlow,
         logoutApi,

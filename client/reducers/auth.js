@@ -15,8 +15,8 @@ const initialState = {
   isLoginCanceled: false,
   isLogoutFetching: false,
   isLogoutFetched: false,
-  error: null,
   user: null,
+  error: null,
 };
 
 export default handleActions(
@@ -75,3 +75,4 @@ export default handleActions(
 );
 
 export const getIsAuthorized = state => state.auth.user !== null;
+export const getUserToken = state => (state.auth.user ? state.auth.user.access_token : '');

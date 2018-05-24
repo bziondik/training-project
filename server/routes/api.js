@@ -51,6 +51,7 @@ router.post('/saveNewUser', (req, res, next) => {
         username: req.body.username,
         password: createHash(req.body.password),
         email: req.body.email,
+        isAdmin: false,
         access_token: uuidv4(),
       });
       newUser.save()
@@ -70,7 +71,7 @@ router.post('/saveNewUser', (req, res, next) => {
 router.post('/login', (req, res, next) => {
   console.log('router.post login');
   passport.authenticate('loginUsers', (err, user) => {
-    console.log('passport.authenticate');
+    console.log('passport.authenticate err, user=', err, user);
     if (err) {
       return next(err);
     }

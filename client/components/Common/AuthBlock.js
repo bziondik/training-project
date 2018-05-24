@@ -18,10 +18,24 @@ class AuthBlock extends React.PureComponent {
     };
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isAuthorized &&
+      (prevState.visibleLoginModal || prevState.visibleRegisterModal)) {
+      return {
+        ...prevState,
+        visibleLoginModal: false,
+        visibleRegisterModal: false,
+      };
+    }
+    return null;
+  }
+
   componentDidUpdate(prevProps) {
     if ((prevProps.auth.isLoginFetching && !this.props.auth.isLoginFetching) ||
       (prevProps.signup.isFetching && !this.props.signup.isFetching)) {
-      this.state.hideMessageRequest();
+      if (this.state.hideMessageRequest) {
+        this.state.hideMessageRequest();
+      }
     }
   }
 
@@ -88,7 +102,7 @@ class AuthBlock extends React.PureComponent {
       </React.Fragment>
     );
     const menu = () => {
-      const urlSettings = `/admin/user/${user.id}`;
+      const urlSettings = `/admin/user/${user._id}`; // eslint-disable-line
       return (
         <Menu onClick={this.handleUserMenuClick}>
           <Menu.Item key="1"><NavLink to="/admin"> AdminPage </NavLink></Menu.Item>

@@ -7,9 +7,16 @@ body {
 .login-form {
   max-width: 300px;
 }
-.login-form-forgot {
+.login-form__forgot {
   float: right;
 }
-.login-form-button {
+.login-form__button {
   width: 100%;
+}
+.register-form {
+  max-width: 400px;
+}
+.content__form {
+  display: flex;
+  justify-content: center;
 }

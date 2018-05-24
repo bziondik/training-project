@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Укажите пароль'],
   },
+  isAdmin: {
+    type: Boolean,
+  },
+  access_token: {
+    type: String,
+  },
 });
 
 mongoose.model('user', userSchema);

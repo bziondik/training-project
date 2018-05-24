@@ -13,6 +13,8 @@ module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production'; // solution for devMode
   return {
     devServer: {
+      publicPath: '/',
+      historyApiFallback: true,
       proxy: {
         '/api': 'http://localhost:3000', // '*': 'http://[::1]:3000',
       },

@@ -27,7 +27,7 @@ passport.use(
     console.log('password = ', password);
     User.findOne({ username })
       .then((user) => { // eslint-disable-line
-        console.log('!!!User.findOne then');
+        console.log('!!!User.findOne then user=', user);
         if (!user) {
           return done(
             null,
