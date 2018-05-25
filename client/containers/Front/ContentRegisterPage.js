@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ContentRegisterPageComponent from '../../components/Front/ContentRegisterPage';
 
 import { getIsAuthorized } from '../../reducers/auth';
-import { logoutRequest } from '../../actions/auth';
+import { logout } from '../../actions/auth';
 import { signupRequest } from '../../actions/signup';
 
 const mapStateToProps = state => ({
@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   signupRequest,
-  logoutRequest,
+  logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentRegisterPageComponent);

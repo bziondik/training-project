@@ -1,22 +1,14 @@
 const passport = require('passport');
+const passportJWT = require('passport-jwt');
 const LocalStrategy = require('passport-local').Strategy;
-const bCrypt = require('bcrypt-nodejs');
-const User = require('mongoose').model('user');
-const uuidv4 = require('uuid/v4');
+const mongoose = require('mongoose');
 
-const isValidPassword = (user, password) => bCrypt.compareSync(password, user.password);
+const User = mongoose.model('user');
 
-passport.serializeUser((user, done) => {
-  console.log('serializeUser: ', user);
-  done(null, user.id);
-});
+const config = require('../secret');
 
-passport.deserializeUser((id, done) => {
-  console.log('deserializeUser: ', id);
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
+const { ExtractJwt } = passportJWT;
+const JwtStrategy = passportJWT.Strategy;
 
 // локальная стратегия
 passport.use(
@@ -34,23 +26,37 @@ passport.use(
             false,
           );
         }
-        if (!isValidPassword(user, password)) {
+        if (!user.validPassword(password)) {
           return done(null, false);
         }
-        const token = uuidv4();
-        const userSave = user;
-        userSave.access_token = token;
-        user.save()
-          .then((userSaved) => {
-            done(null, userSaved);
-          })
-          .catch(err => done(err, false));
+        return done(null, user);
       })
       .catch((err) => {
-        console.log('!!!User.findOne catch');
+        console.log('!!!LocalStrategy User.findOne catch err=', err);
         done(err);
       });
   }),
 );
 
-module.exports = passport;
+const strategy = new JwtStrategy(
+  {
+    secretOrKey: config.secret,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  },
+  (jwtPayload, done) => {
+    console.log('JwtStrategy jwtPayload=', jwtPayload);
+    User.findById(jwtPayload.id)
+      .then((user) => {
+        if (user) {
+          return done(null, user);
+        }
+        return done(null, false);
+      })
+      .catch((err) => {
+        console.log('!!!Strategy User.find catch err=', err);
+        done(err);
+      });
+  },
+);
+
+passport.use(strategy);

@@ -28,7 +28,7 @@ class ContentRegisterPage extends React.PureComponent {
     this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLogout = () => {
-    this.props.logoutRequest();
+    this.props.logout();
   }
 
   render() {
@@ -53,7 +53,7 @@ ContentRegisterPage.propTypes = {
     isFetching: PropTypes.bool,
   }).isRequired,
   signupRequest: PropTypes.func.isRequired,
-  logoutRequest: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
 export default ContentRegisterPage;

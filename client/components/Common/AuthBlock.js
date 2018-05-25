@@ -64,7 +64,7 @@ class AuthBlock extends React.PureComponent {
     this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLogout = () => {
-    this.props.logoutRequest();
+    this.props.logout();
   }
   handleUserMenuClick = (e) => {
     console.log('click', e);
@@ -138,7 +138,7 @@ AuthBlock.propTypes = {
   }).isRequired,
   signupRequest: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
-  logoutRequest: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
 export default AuthBlock;

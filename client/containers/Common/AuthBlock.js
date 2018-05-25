@@ -4,7 +4,7 @@ import AuthBlockComponent from '../../components/Common/AuthBlock';
 
 import { getIsAuthorized } from '../../reducers/auth';
 import { signupRequest } from '../../actions/signup';
-import { loginRequest, logoutRequest } from '../../actions/auth';
+import { loginRequest, logout } from '../../actions/auth';
 
 const mapStateToProps = state => ({
   signup: state.signup,
@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   signupRequest,
   loginRequest,
-  logoutRequest,
+  logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthBlockComponent);

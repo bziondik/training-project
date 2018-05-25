@@ -10,8 +10,6 @@ const serverConfig = require('./config');
 const secret = require('../secret');
 
 const mongoose = require('mongoose');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const sanitize = require('mongo-sanitize');
 
 mongoose.Promise = global.Promise;
@@ -41,23 +39,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname.replace(serverConfig.serverRoute, ''), serverConfig.publicRoute)));
-app.use(session({
-  secret: secret.session.secret,
-  name: secret.session.name,
-  saveUninitialized: false,
-  httpOnly: true, // only allow http[s] requests to access sessions
-  resave: false, // don't save any session unless something is changed
-  store: new MongoStore({ // where to save the sessions
-    mongooseConnection: mongoose.connection,
-    ttl: secret.session.ttl,
-    touchAfter: secret.session.touchAfter,
-  }),
-}));
 
-const passport = require('./config-passport');
+require('./config-passport');
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
 
 app.use('/api', apiRouter);
 app.use('/', indexRouter);

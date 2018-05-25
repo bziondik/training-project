@@ -11,7 +11,10 @@
     "server": "nodemon ./server/app.js"
   },
   "nodemonConfig": {
-    "ignore": ["client/*","node_modules/*"]
+    "ignore": [
+      "client/*",
+      "node_modules/*"
+    ]
   },
   "devDependencies": {
     "autoprefixer": "^8.5.0",
@@ -56,10 +59,12 @@
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
     "http-errors": "^1.6.3",
+    "jsonwebtoken": "^8.2.1",
     "mongo-sanitize": "^1.0.0",
     "mongoose": "^5.1.1",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",

@@ -28,7 +28,7 @@ class ContentLoginPage extends React.PureComponent {
     this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLogout = () => {
-    this.props.logoutRequest();
+    this.props.logout();
   }
 
   render() {
@@ -54,7 +54,7 @@ ContentLoginPage.propTypes = {
     isLoginFetching: PropTypes.bool,
   }).isRequired,
   loginRequest: PropTypes.func.isRequired,
-  logoutRequest: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
 export default ContentLoginPage;

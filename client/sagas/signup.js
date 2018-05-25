@@ -1,13 +1,8 @@
-import axios from 'axios';
 import { call, takeLatest } from 'redux-saga/effects';
 
 import { signupRequest, signupSuccess, signupError } from '../actions/signup';
 import requestFlow from './request';
-import { signupUrl } from './api';
-
-function signupApi(data) {
-  return axios.post(signupUrl, data);
-}
+import { signupApi } from './api';
 
 function* signupFlow(action) {
   yield call(

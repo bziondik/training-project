@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ContentLoginPageComponent from '../../components/Front/ContentLoginPage';
 
 import { getIsAuthorized } from '../../reducers/auth';
-import { loginRequest, logoutRequest } from '../../actions/auth';
+import { loginRequest, logout } from '../../actions/auth';
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   loginRequest,
-  logoutRequest,
+  logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentLoginPageComponent);

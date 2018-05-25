@@ -4,17 +4,13 @@ import {
   loginRequest,
   loginSuccess,
   loginError,
-  logoutRequest,
-  logoutSuccess,
-  logoutError,
+  logout,
 } from '../actions/auth';
 
 const initialState = {
   isLoginFetching: false,
   isLoginFetched: false,
   isLoginCanceled: false,
-  isLogoutFetching: false,
-  isLogoutFetched: false,
   user: null,
   error: null,
 };
@@ -50,24 +46,10 @@ export default handleActions(
       isLoginFetched: false,
       error: action.payload,
     }),
-    [logoutRequest]: state => ({
+    [logout]: state => ({
       ...state,
       isLoginCanceled: state.isLoginFetching, // cancelled login request
       isLoginFetching: false, // cancelled login request
-      isLogoutFetching: true,
-      isLogoutFetched: false,
-    }),
-    [logoutSuccess]: state => ({
-      ...state,
-      isLogoutFetching: false,
-      isLogoutFetched: true,
-      user: null,
-    }),
-    [logoutError]: (state, action) => ({
-      ...state,
-      isLogoutFetching: false,
-      isLogoutFetched: false,
-      error: action.payload,
       user: null,
     }),
   },

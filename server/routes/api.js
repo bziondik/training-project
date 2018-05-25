@@ -1,24 +1,10 @@
 const express = require('express');
 const passport = require('passport');
-const bCrypt = require('bcrypt-nodejs');
-const uuidv4 = require('uuid/v4');
 const mongoose = require('mongoose');
 
 const User = mongoose.model('user');
 
-
 const router = express.Router();
-
-const SetCookie = (res, data) => {
-  res.cookie('access_token', data, {
-    // TODO change maxAge
-    httpOnly: false,
-    expires: new Date(Date.now() + (2 * 604800000)),
-    path: '/',
-  });
-};
-
-const createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 
 /* eslint-disable consistent-return */
 // function checkPermissions(req, res, next) {
@@ -32,13 +18,9 @@ const createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10),
 //     return res.json({ error: 'Вы не авторизованы!' });
 //   }
 // }
-router.get('/test', (req, res) => {
-  console.log('router.get test');
-  return res.status(200).json({ test: true });
-});
 
 router.post('/saveNewUser', (req, res, next) => {
-  console.log('!!!->in route /saveNewUser req=', req);
+  console.log('!!!->in route /saveNewUser');
   User.findOne({ username: req.body.username })
     .then((user) => {
       console.log('!!!->then findOne user=', user);
@@ -49,20 +31,13 @@ router.post('/saveNewUser', (req, res, next) => {
       console.log('!!!->newUser req.body=', req.body);
       const newUser = new User({
         username: req.body.username,
-        password: createHash(req.body.password),
         email: req.body.email,
         isAdmin: false,
-        access_token: uuidv4(),
       });
-      newUser.save()
-        .then((savedUser) => {
-          req.logIn(savedUser, (err) => {
-            if (err) {
-              return next(err);
-            }
-            return res.status(200).json(savedUser);
-          });
-        })
+      newUser.setPassword(req.body.password);
+      newUser
+        .save()
+        .then(savedUser => res.status(200).json(savedUser.toAuthJSON()))
         .catch(next);
     })
     .catch(next);
@@ -70,7 +45,7 @@ router.post('/saveNewUser', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   console.log('router.post login');
-  passport.authenticate('loginUsers', (err, user) => {
+  passport.authenticate('loginUsers', { session: false }, (err, user) => {
     console.log('passport.authenticate err, user=', err, user);
     if (err) {
       return next(err);
@@ -80,39 +55,34 @@ router.post('/login', (req, res, next) => {
       return res.json({ message: 'Укажите правильный логин и пароль!' });
     }
     console.log('req.body =', req.body);
-    if (req.body.remember) {
-      SetCookie(res, user.access_token);
-    }
-    req.login(user, (errLogin) => {
-      if (errLogin) {
-        return next(errLogin);
-      }
-      console.log('login user =', user);
-      return res.status(200).send(user);
-    });
+    return res.status(200).send(user.toAuthJSON());
   })(req, res, next);
 });
 
 router.post('/logout', (req, res) => {
   req.logout();
-  res.redirect('/');
+  return res.status(200).send({
+    success: true,
+  });
 });
 
 router.post('/authFromToken', (req, res, next) => {
-  User.findOne({ access_token: req.body.access_token })
-    .then((user) => {
-      if (!user) {
-        res.status(400);
-        return res.json({ message: 'Пользователя с таким токеном не существует!' });
-      }
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
-        }
-        return res.status(200).json(user);
+  console.log('router.post authFromToken');
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    console.log('passport.authenticate err, user=', err, user);
+    if (err) {
+      return res.status(401).send({
+        success: false,
+        error: err,
       });
-    })
-    .catch(next);
+    }
+    if (!user) {
+      return res.status(401).send({
+        success: false,
+      });
+    }
+    return res.status(200).send(user.toAuthJSON());
+  })(req, res, next);
 });
 
 module.exports = router;
