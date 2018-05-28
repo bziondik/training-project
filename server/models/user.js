@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
   },
+  resetToken: {
+    type: Boolean,
+  },
 });
 
 /* eslint-disable func-names */
@@ -41,12 +44,24 @@ userSchema.methods.validPassword = function (password) {
 userSchema.methods.generateJWT = function () {
   const today = new Date();
   const exp = new Date(today);
-  exp.setDate(today.getDate() + 60);
+  exp.setDate(today.getDate() + (30 * 24 * 60 * 60)); // exp 1 month
 
   return jwt.sign({
     id: this._id, // eslint-disable-line
     username: this.username,
-    // exp: Math.floor(exp.getTime() / 1000),
+    exp: Math.floor(Date.now() / 1000) + (1 * 60),
+  }, config.secret);
+};
+
+userSchema.methods.generateResetJWT = function () {
+  console.log('setResetJWT this=', this);
+  const today = new Date();
+  const exp = new Date(today);
+  exp.setDate(today.getDate() + (30 * 24 * 60 * 60)); // exp 1 month
+
+  return jwt.sign({
+    id: this._id, // eslint-disable-line
+    username: this.username,
     exp: Math.floor(Date.now() / 1000) + (1 * 60),
   }, config.secret);
 };

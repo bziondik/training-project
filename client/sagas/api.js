@@ -4,6 +4,8 @@ const baseApiUrl = '/api';
 export const loginUrl = '/login';
 export const signupUrl = '/saveNewUser';
 export const authFromTokenUrl = '/authFromToken';
+export const forgotPasswordUrl = '/forgotpassword';
+export const resetPasswordUrl = '/resetpassword';
 
 const instance = axios.create({
   baseURL: baseApiUrl,
@@ -23,3 +25,5 @@ export const clearTokenApi = () => {
 export const signupApi = data => instance.post(signupUrl, data);
 export const loginApi = data => instance.post(loginUrl, data);
 export const authFromTokenApi = () => instance.post(authFromTokenUrl);
+export const forgotPasswordApi = data => instance.post(forgotPasswordUrl, data);
+export const resetPasswordApi = data => instance.post(resetPasswordUrl, data);

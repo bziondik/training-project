@@ -23,10 +23,10 @@ export default function* (fn, settings) {
     if (settings && settings.actionError) {
       yield put(settings.actionError(message));
     }
-    if (error.response.status !== 401) {
-      yield put(networkError(error));
-    } else {
+    if (error.response && error.response.status === 401) {
       yield put(logout());
+    } else {
+      yield put(networkError(error));
     }
   }
 }

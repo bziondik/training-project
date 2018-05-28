@@ -58,3 +58,4 @@ export default handleActions(
 
 export const getIsAuthorized = state => state.auth.user !== null;
 export const getUserToken = state => (state.auth.user ? state.auth.user.access_token : '');
+export const getIsRemberMe = state => state.auth.isRememberMe;

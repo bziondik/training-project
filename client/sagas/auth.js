@@ -22,9 +22,12 @@ import {
 } from '../localStorage';
 
 function* authorize(actionLogin) {
+  let isRemember = false;
+  let taskLogin;
   try {
     if (actionLogin.type === loginRequest.toString()) {
-      yield call(
+      isRemember = actionLogin.payload.remember;
+      taskLogin = yield fork(
         requestFlow,
         loginApi,
         {
@@ -33,12 +36,20 @@ function* authorize(actionLogin) {
           data: actionLogin.payload,
         },
       );
+      yield take(loginSuccess);
     } else { // signupSuccess
       yield put(loginSuccess(actionLogin.payload));
     }
+    const token = yield select(getUserToken);
+    yield call(setTokenApi, token);
+    if (isRemember) {
+      yield call(setTokenToLocalStorage, token);
+    }
   } finally {
     if (yield cancelled()) {
-      // ... put special cancellation handling code here
+      if (taskLogin) {
+        yield cancel(taskLogin);
+      }
       console.log('authorize cancelled');
     }
   }
@@ -65,19 +76,15 @@ function* loginFlow() {
       } else {
         const actionLogin = yield take([loginRequest, signupSuccess]);
         task = yield fork(authorize, actionLogin);
-        yield take(loginSuccess);
-        token = yield select(getUserToken);
-        yield call(setTokenApi, token);
-        yield call(setTokenToLocalStorage, token);
       }
     }
     console.log('saga loginFlow before take([logout, loginError]);');
     const action = yield take([logout, loginError]);
     console.log('saga loginFlow after take([logout, loginError]); action=', action);
+    if (task) {
+      yield cancel(task);
+    }
     if (action.type === logout.toString()) {
-      if (task) {
-        yield cancel(task);
-      }
       yield call(removeTokenFromLocalStorage);
       yield call(clearTokenApi);
     }

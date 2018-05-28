@@ -36,6 +36,12 @@ class AuthBlock extends React.PureComponent {
       if (this.state.hideMessageRequest) {
         this.state.hideMessageRequest();
       }
+      if (this.props.auth.error) {
+        this.showLoginModal();
+      }
+      if (this.props.signup.error) {
+        this.showRegisterModal();
+      }
     }
   }
 
@@ -54,12 +60,14 @@ class AuthBlock extends React.PureComponent {
   handleSubmitRegisterForm = (data) => {
     console.log('handleSubmitRegisterForm data=', data);
     this.props.signupRequest(data);
+    this.handleCancelRegisterModal();
     const hide = message.loading('Registration in progress..', 0);
     this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLoginForm = (data) => {
     console.log('handleSubmitLoginForm data=', data);
     this.props.loginRequest(data);
+    this.handleCancelLoginModal();
     const hide = message.loading('Login in progress..', 0);
     this.setState({ hideMessageRequest: hide });
   }
@@ -135,6 +143,7 @@ AuthBlock.propTypes = {
   }).isRequired,
   signup: PropTypes.shape({
     isFetching: PropTypes.bool,
+    error: PropTypes.string,
   }).isRequired,
   signupRequest: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,

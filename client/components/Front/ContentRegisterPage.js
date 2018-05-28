@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { message } from 'antd';
 import PropTypes from 'prop-types';
 
-import RegisterForm from '../../components/Front/RegisterForm';
+import RegisterForm from './RegisterForm';
 
 class ContentRegisterPage extends React.PureComponent {
   constructor() {

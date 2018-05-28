@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('user');
 
+const serverConfig = require('../config');
+const smtpTransport = require('../nodeMailerWithTemp');
+
 const router = express.Router();
 
 /* eslint-disable consistent-return */
@@ -26,7 +29,7 @@ router.post('/saveNewUser', (req, res, next) => {
       console.log('!!!->then findOne user=', user);
       if (user) {
         res.status(400);
-        return res.json({ message: 'Пользователь с таким логином уже существует' });
+        return res.json({ message: 'User with such login already exists' });
       }
       console.log('!!!->newUser req.body=', req.body);
       const newUser = new User({
@@ -52,7 +55,7 @@ router.post('/login', (req, res, next) => {
     }
     if (!user) {
       res.status(400);
-      return res.json({ message: 'Укажите правильный логин и пароль!' });
+      return res.json({ message: 'Please enter correct login and password!' });
     }
     console.log('req.body =', req.body);
     return res.status(200).send(user.toAuthJSON());
@@ -83,6 +86,59 @@ router.post('/authFromToken', (req, res, next) => {
     }
     return res.status(200).send(user.toAuthJSON());
   })(req, res, next);
+});
+
+router.post('/forgotpassword', (req, res, next) => {
+  console.log('router.post resetPassword');
+  if (req.body.email !== undefined) {
+    console.log('req.body.email=', req.body.email);
+    const emailAddress = req.body.email;
+    User.findOne({ email: emailAddress })
+      .then((user) => {
+        console.log('!!!->then findOne user=', user);
+        if (!user) {
+          res.status(400);
+          return res.json({ message: 'User with such email does not exist' });
+        }
+        const token = user.generateResetJWT();
+        console.log('generateResetJWT token=', token);
+        User.findByIdAndUpdate(user._id, { $set: { esetToken: token } }, { new: false }) // eslint-disable-line
+          .then((savedUser) => {
+            console.log('user.update savedUser=', savedUser);
+            console.log('!!!->then savedUser=', savedUser);
+            const data = {
+              to: savedUser.email,
+              from: serverConfig.email,
+              template: 'forgot-password-email',
+              subject: 'Password help has arrived!',
+              context: {
+                url: `${serverConfig.domen}/reset_password?token=${token}`,
+                name: savedUser.username,
+              },
+            };
+            console.log('!!!data=', data);
+            smtpTransport.sendMail(data, (error, info) => {
+              console.log('!!!smtpTransport.sendMail err=', error);
+              console.log('!!!smtpTransport.sendMail info=', info);
+              if (!error) {
+                console.log('!!!res=', res);
+                console.log('!!!res.status(200)');
+                return res.status(200).json({ message: 'Kindly check your email for further instructions' });
+              }
+              return next(error);
+            });
+          })
+          .catch(next);
+      })
+      .catch(next);
+  } else {
+    return res.status(400).json({ message: 'Email address is missing.' });
+  }
+});
+
+router.post('/resetpassword', (req, res) => {
+  console.log('router.post resetPassword');
+  return res.status(200).send(true);
 });
 
 module.exports = router;

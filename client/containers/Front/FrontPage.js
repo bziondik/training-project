@@ -30,7 +30,11 @@ const frontRouter = (
 class FrontPage extends React.PureComponent {
   render() {
     const { location } = this.props;
-    const showAuthBlock = !(location.pathname === '/login' || location.pathname === '/register');
+    const showAuthBlock = !(location.pathname === '/login' ||
+      location.pathname === '/register' ||
+      location.pathname === '/resetpassword' ||
+      location.pathname === '/forgotpassword'
+    );
     return Page(frontMenu, showAuthBlock ? frontHeader : '', frontRouter);
   }
 }

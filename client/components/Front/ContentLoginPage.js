@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { message } from 'antd';
 import PropTypes from 'prop-types';
 
-import LoginForm from '../../components/Front/LoginForm';
+import LoginForm from './LoginForm';
 
 class ContentLoginPage extends React.PureComponent {
   constructor() {
