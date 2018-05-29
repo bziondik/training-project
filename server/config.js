@@ -4,4 +4,5 @@ module.exports = {
   apiRoute: '/api',
   serverRoute: '/server',
   publicRoute: 'public',
+  from: 'bziondik@gmail.com',
 };

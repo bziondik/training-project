@@ -22,7 +22,7 @@ const router = express.Router();
 //   }
 // }
 
-router.post('/saveNewUser', (req, res, next) => {
+router.post('/saveNewUser', async (req, res, next) => {
   console.log('!!!->in route /saveNewUser');
   User.findOne({ username: req.body.username })
     .then((user) => {
@@ -88,56 +88,80 @@ router.post('/authFromToken', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/forgotpassword', (req, res, next) => {
-  console.log('router.post resetPassword');
+router.post('/forgotpassword', async (req, res, next) => {
+  console.log('router.post forgotpassword');
   if (req.body.email !== undefined) {
-    console.log('req.body.email=', req.body.email);
-    const emailAddress = req.body.email;
-    User.findOne({ email: emailAddress })
-      .then((user) => {
-        console.log('!!!->then findOne user=', user);
-        if (!user) {
-          res.status(400);
-          return res.json({ message: 'User with such email does not exist' });
-        }
-        const token = user.generateResetJWT();
-        console.log('generateResetJWT token=', token);
-        User.findByIdAndUpdate(user._id, { $set: { esetToken: token } }, { new: false }) // eslint-disable-line
-          .then((savedUser) => {
-            console.log('user.update savedUser=', savedUser);
-            console.log('!!!->then savedUser=', savedUser);
-            const data = {
-              to: savedUser.email,
-              from: serverConfig.email,
-              template: 'forgot-password-email',
-              subject: 'Password help has arrived!',
-              context: {
-                url: `${serverConfig.domen}/reset_password?token=${token}`,
-                name: savedUser.username,
-              },
-            };
-            console.log('!!!data=', data);
-            smtpTransport.sendMail(data, (error, info) => {
-              console.log('!!!smtpTransport.sendMail err=', error);
-              console.log('!!!smtpTransport.sendMail info=', info);
-              if (!error) {
-                console.log('!!!res=', res);
-                console.log('!!!res.status(200)');
-                return res.status(200).json({ message: 'Kindly check your email for further instructions' });
-              }
-              return next(error);
-            });
-          })
-          .catch(next);
-      })
-      .catch(next);
+    try {
+      const emailAddress = req.body.email;
+      const user = await User.findOne({ email: emailAddress });
+      console.log('findOne user=', user);
+      if (!user) {
+        res.status(400);
+        return res.json({ message: 'User with such email does not exist' });
+      }
+      const token = user.generateResetJWT();
+      user.resetToken = token;
+      const savedUser = await user.save();
+      console.log('user.update savedUser=', savedUser);
+      const data = {
+        to: savedUser.email,
+        from: serverConfig.from,
+        template: 'forgot-password-email',
+        subject: 'Password help has arrived!',
+        context: {
+          url: `${serverConfig.domen}/resetpassword?token=${savedUser.resetToken}`,
+          name: savedUser.username,
+        },
+      };
+      // const info = await
+      smtpTransport.sendMail(data);
+      console.log('!!!res.status(200)');
+      res.status(200).json({ message: 'Check your email for further instructions' });
+      return res.end();
+    } catch (error) {
+      console.log('forgotpassword error=', error);
+      next(error);
+    }
   } else {
     return res.status(400).json({ message: 'Email address is missing.' });
   }
 });
 
-router.post('/resetpassword', (req, res) => {
+router.post('/resetpassword', async (req, res, next) => {
   console.log('router.post resetPassword');
+  try {
+    if (req.body.password !== req.body.confirm) {
+      res.status(400);
+      return res.json({ message: 'Password and confirm password not equal!' });
+    }
+    const user = await User.findOne({ resetToken: req.body.resetToken });
+    console.log('findOne user=', user);
+    if (!user) {
+      res.status(400);
+      return res.json({ message: 'User with such token does not exist' });
+    }
+    user.setPassword(req.body.password);
+    user.resetToken = '';
+    const savedUser = await user.save();
+    console.log('user.update savedUser=', savedUser);
+    const data = {
+      to: savedUser.email,
+      from: serverConfig.from,
+      template: 'reset-password-email',
+      subject: 'You password successufy reset!',
+      context: {
+        name: savedUser.username,
+      },
+    };
+    // const info = await
+    smtpTransport.sendMail(data);
+    console.log('!!!res.status(200)');
+    res.status(200).json({ message: 'Password has been reseted' });
+    return res.end();
+  } catch (error) {
+    console.log('resetpassword error=', error);
+    next(error);
+  }
   return res.status(200).send(true);
 });
 

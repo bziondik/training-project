@@ -19,14 +19,14 @@ export default function* (fn, settings) {
       yield put(settings.actionSuccess(response.data));
     }
   } catch (error) {
-    const message = error.response && error.response.data && error.response.data.message;
-    if (settings && settings.actionError) {
-      yield put(settings.actionError(message));
-    }
     if (error.response && error.response.status === 401) {
       yield put(logout());
     } else {
       yield put(networkError(error));
+    }
+    const message = error.response && error.response.data && error.response.data.message;
+    if (settings && settings.actionError) {
+      yield put(settings.actionError(message));
     }
   }
 }

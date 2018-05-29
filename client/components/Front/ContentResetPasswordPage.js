@@ -10,6 +10,7 @@ class ContentResetPasswordPage extends React.PureComponent {
     super();
     this.state = {
       hideMessageRequest: null,
+      isSend: false,
     };
   }
 
@@ -23,15 +24,15 @@ class ContentResetPasswordPage extends React.PureComponent {
 
   handleSubmitResetPasswordForm = (data) => {
     console.log('handleSubmitResetPasswordForm data=', data);
-    this.props.resetPasswordRequest(data);
+    const searchParams = new URLSearchParams(this.props.location.search);
+    this.props.resetPasswordRequest({ ...data, resetToken: searchParams.get('token') });
     const hide = message.loading('Please, wait..', 0);
-    this.setState({ hideMessageRequest: hide });
+    this.setState({ hideMessageRequest: hide, isSend: true });
   }
 
   render() {
     const {
       isAuthorized,
-      resetPassword: { isSuccess },
     } = this.props;
     const renderNotSend = () => (
       <React.Fragment>
@@ -49,7 +50,7 @@ class ContentResetPasswordPage extends React.PureComponent {
     const renderNotAuthorized = () => (
       <React.Fragment>
         <h1 className="content__title">Reset your password</h1>
-        {isSuccess ? renderSend() : renderNotSend()}
+        {this.state.isSend ? renderSend() : renderNotSend()}
       </React.Fragment>
     );
     const renderIsAuthorized = () => (
@@ -60,6 +61,9 @@ class ContentResetPasswordPage extends React.PureComponent {
 }
 
 ContentResetPasswordPage.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }).isRequired,
   isAuthorized: PropTypes.bool.isRequired,
   resetPassword: PropTypes.shape({
     isFetching: PropTypes.bool,

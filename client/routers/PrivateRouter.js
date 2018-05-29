@@ -13,7 +13,13 @@ class AdminRouter extends React.PureComponent {
       <Route
         {...rest}
         render={props => (
-          authorized ? <Component {...props} /> : <Redirect to="/login" />
+          authorized ? <Component {...props} /> : (
+            <Redirect to={{
+              pathname: '/login',
+              state: { from: props.location },
+            }}
+            />
+          )
         )}
       />
     );

@@ -30,6 +30,8 @@ module.exports = (env, argv) => {
     ],
     output: {
       path: path.join(__dirname, 'public'),
+      filename: 'bundle.js',
+      publicPath: '/',
     },
     optimization: {
       minimizer: [

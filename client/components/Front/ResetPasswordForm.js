@@ -5,9 +5,16 @@ import PropTypes from 'prop-types';
 const FormItem = Form.Item;
 
 class ResetPasswordForm extends React.Component {
+  state = {
+    confirmDirty: false,
+  };
   componentDidMount() {
     // To disabled submit button at the beginning.
     this.props.form.validateFields();
+  }
+  handleConfirmBlur = (e) => {
+    const { value } = e.target;
+    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   }
   handleSubmit = (e) => {
     e.preventDefault();

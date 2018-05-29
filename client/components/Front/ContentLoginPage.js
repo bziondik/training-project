@@ -33,11 +33,12 @@ class ContentLoginPage extends React.PureComponent {
 
   render() {
     const { isAuthorized } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/admin' } };
     const renderNotAuthorized = () => (
       <LoginForm onSubmit={this.handleSubmitLoginForm} />
     );
     const renderIsAuthorized = () => (
-      <Redirect to="/admin" />
+      <Redirect to={from} />
     );
     return (
       <div className="content__form">
@@ -55,6 +56,9 @@ ContentLoginPage.propTypes = {
   }).isRequired,
   loginRequest: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.object,
+  }).isRequired,
 };
 
 export default ContentLoginPage;

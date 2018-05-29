@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
   },
   resetToken: {
-    type: Boolean,
+    type: String,
   },
 });
 
