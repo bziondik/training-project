@@ -60,3 +60,58 @@ const strategy = new JwtStrategy(
 );
 
 passport.use(strategy);
+
+module.exports = {
+  initialize: () => passport.initialize(),
+  authenticateLogin: (req, res, next) => passport.authenticate(
+    'loginUsers',
+    { session: false },
+    (err, user, info) => {
+      console.log('authenticate info', info);
+      if (err) {
+        console.log('authenticate arr', err);
+        return res.status(401).send({
+          success: false,
+          error: err,
+        });
+      }
+      if (!user) {
+        res.status(400);
+        return res.json({ message: 'Please enter correct login and password!' });
+      }
+      // Forward user information to the next middleware
+      req.user = user;
+      return next();
+    },
+  )(req, res, next),
+  authenticateJWT: (req, res, next) => passport.authenticate(
+    'jwt',
+    { session: false },
+    (err, user, info) => {
+      console.log('authenticate info', info);
+      if (err) {
+        console.log('authenticate arr', err);
+        return res.status(401).send({
+          success: false,
+          error: err,
+        });
+      }
+      if (!user) {
+        return res.status(401).send({
+          success: false,
+        });
+      }
+      // Forward user information to the next middleware
+      req.user = user;
+      return next();
+    },
+  )(req, res, next),
+  mustBeAdmin: (req, res, next) => {
+    if (req.user.isAdmin) {
+      return next();
+    }
+    return res.status(403).send({
+      message: 'Access forbidden - only for administrators.',
+    });
+  },
+};

@@ -3,34 +3,39 @@ const bCrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 const config = require('../../secret');
 
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    lowercase: true,
-    required: [true, "can't be blank"],
-    match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-    index: true,
-    unique: true,
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      lowercase: true,
+      required: [true, "can't be blank"],
+      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+      index: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      required: [true, "can't be blank"],
+      match: [/\S+@\S+\.\S+/, 'is invalid'],
+      index: true,
+      unique: true,
+    },
+    hash: {
+      type: String,
+      required: [true, 'Укажите пароль'],
+    },
+    isAdmin: {
+      type: Boolean,
+    },
+    resetToken: {
+      type: String,
+    },
   },
-  email: {
-    type: String,
-    lowercase: true,
-    required: [true, "can't be blank"],
-    match: [/\S+@\S+\.\S+/, 'is invalid'],
-    index: true,
-    unique: true,
+  {
+    timestamps: true,
   },
-  hash: {
-    type: String,
-    required: [true, 'Укажите пароль'],
-  },
-  isAdmin: {
-    type: Boolean,
-  },
-  resetToken: {
-    type: String,
-  },
-});
+);
 
 /* eslint-disable func-names */
 userSchema.methods.setPassword = function (password) {
@@ -42,27 +47,20 @@ userSchema.methods.validPassword = function (password) {
 };
 
 userSchema.methods.generateJWT = function () {
-  const today = new Date();
-  const exp = new Date(today);
-  exp.setDate(today.getDate() + (30 * 24 * 60 * 60)); // exp 1 month
-
   return jwt.sign({
     id: this._id, // eslint-disable-line
     username: this.username,
-    exp: Math.floor(Date.now() / 1000) + (1 * 60),
+    exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // exp 1 month
   }, config.secret);
 };
 
 userSchema.methods.generateResetJWT = function () {
   console.log('setResetJWT this=', this);
-  const today = new Date();
-  const exp = new Date(today);
-  exp.setDate(today.getDate() + (30 * 24 * 60 * 60)); // exp 1 month
 
   return jwt.sign({
     id: this._id, // eslint-disable-line
     username: this.username,
-    exp: Math.floor(Date.now() / 1000) + (1 * 60),
+    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // exp 1 day
   }, config.secret);
 };
 
@@ -72,6 +70,15 @@ userSchema.methods.toAuthJSON = function () {
     email: this.email,
     isAdmin: this.isAdmin,
     access_token: this.generateJWT(),
+  };
+};
+
+userSchema.methods.toJSON = function () {
+  return {
+    username: this.username,
+    email: this.email,
+    isAdmin: this.isAdmin,
+    createdAt: this.createdAt,
   };
 };
 

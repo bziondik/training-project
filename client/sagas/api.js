@@ -6,10 +6,14 @@ export const signupUrl = '/saveNewUser';
 export const authFromTokenUrl = '/authFromToken';
 export const forgotPasswordUrl = '/forgotpassword';
 export const resetPasswordUrl = '/resetpassword';
+export const usersUrl = '/users';
 
 const instance = axios.create({
   baseURL: baseApiUrl,
   timeout: 1000,
+  headers: {
+    'Cache-Control': 'no-cache',
+  },
 });
 
 export const setTokenApi = (accessToken) => {
@@ -27,3 +31,9 @@ export const loginApi = data => instance.post(loginUrl, data);
 export const authFromTokenApi = () => instance.post(authFromTokenUrl);
 export const forgotPasswordApi = data => instance.post(forgotPasswordUrl, data);
 export const resetPasswordApi = data => instance.post(resetPasswordUrl, data);
+
+export const getUsersApi = () => instance.get(usersUrl);
+export const getUserApi = id => instance.get(`${usersUrl}/${id}`);
+export const createUserApi = data => instance.post(usersUrl, data);
+export const updateUserApi = (id, data) => instance.put(`${usersUrl}/${id}`, data);
+export const deleteUserApi = id => instance.delete(`${usersUrl}/${id}`);
