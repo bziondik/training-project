@@ -17,6 +17,7 @@ function* usersFlow() {
     {
       actionSuccess: actions.usersSuccess,
       actionError: actions.usersError,
+      isLoading: true,
     },
   );
 }
@@ -40,23 +41,25 @@ function* userCreateFlow() {
     },
   );
 }
-function* userUpdateFlow() {
+function* userUpdateFlow(action) {
   yield call(
     requestFlow,
     updateUserApi,
     {
       actionSuccess: actions.userUpdateSuccess,
       actionError: actions.userUpdateError,
+      data: action.payload,
     },
   );
 }
-function* userDeleteFlow() {
+function* userDeleteFlow(action) {
   yield call(
     requestFlow,
     deleteUserApi,
     {
       actionSuccess: actions.userDeleteSuccess,
       actionError: actions.userDeleteError,
+      data: action.payload,
     },
   );
 }

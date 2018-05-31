@@ -5,26 +5,34 @@ const passport = require('../config-passport');
 const saveNewUser = require('../controllers/saveNewUser');
 const forgotPassword = require('../controllers/forgotPassword');
 const resetPassword = require('../controllers/resetPassword');
+const deleteUser = require('../controllers/deleteUser');
+const updateUser = require('../controllers/updateUser');
 
 const router = express.Router();
 const User = mongoose.model('user');
 
 router.post('/saveNewUser', saveNewUser);
 
-router.post('/login', passport.authenticateLogin, (req, res) => {
+router.post('/login', passport.authenticateLogin, async (req, res) => {
   console.log('router.post login');
   console.log('req.body =', req.body);
-  return res.status(200).send(req.user.toAuthJSON());
+  console.log('req.user =', req.user);
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(1);
+    }, 3000);
+  });
+  return res.status(200).json(req.user.toAuthJSON());
 });
 
 router.post('/logout', (req, res) => {
   req.logout();
-  return res.status(200).send({ success: true });
+  return res.status(200).json({ success: true });
 });
 
 router.post('/authFromToken', passport.authenticateJWT, (req, res) => {
   console.log('router.post authFromToken');
-  return res.status(200).send(req.user.toAuthJSON());
+  return res.status(200).json(req.user.toAuthJSON());
 });
 
 router.post('/forgotpassword', forgotPassword);
@@ -39,5 +47,8 @@ router.get('/users', passport.authenticateJWT, passport.mustBeAdmin, (req, res, 
     })
     .catch(next);
 });
+
+router.delete('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, deleteUser);
+router.put('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, updateUser);
 
 module.exports = router;

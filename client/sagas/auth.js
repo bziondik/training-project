@@ -19,7 +19,7 @@ import {
   getTokenFromLocalStorage,
   setTokenToLocalStorage,
   removeTokenFromLocalStorage,
-} from '../localStorage';
+} from '../utils/localStorage';
 
 function* authorize(actionLogin) {
   let isRemember = false;
@@ -34,6 +34,7 @@ function* authorize(actionLogin) {
           actionSuccess: loginSuccess,
           actionError: loginError,
           data: actionLogin.payload,
+          isLoading: true,
         },
       );
       yield take(loginSuccess);

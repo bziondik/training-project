@@ -12,7 +12,7 @@ export const userCreateRequest = createAction('USER_CREATE_REQUESTING');
 export const userCreateSuccess = createAction('USER_CREATE_SUCCESS');
 export const userCreateError = createAction('USER_CREATE_ERROR');
 
-export const userUpdateRequest = createAction('USER_UPDATE_REQUESTING');
+export const userUpdateRequest = createAction('USER_UPDATE_REQUESTING', (id, changes) => ({ id, changes }));
 export const userUpdateSuccess = createAction('USER_UPDATE_SUCCESS');
 export const userUpdateError = createAction('USER_UPDATE_ERROR');
 

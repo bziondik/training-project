@@ -66,6 +66,7 @@ userSchema.methods.generateResetJWT = function () {
 
 userSchema.methods.toAuthJSON = function () {
   return {
+    id: this._id, // eslint-disable-line
     username: this.username,
     email: this.email,
     isAdmin: this.isAdmin,
@@ -75,6 +76,7 @@ userSchema.methods.toAuthJSON = function () {
 
 userSchema.methods.toJSON = function () {
   return {
+    id: this._id, // eslint-disable-line
     username: this.username,
     email: this.email,
     isAdmin: this.isAdmin,

@@ -1,9 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import Page from '../../components/Common/Page';
+import Page from '../Common/Page';
 import AuthBlock from '../Common/AuthBlock';
 import FrontRouter from '../../routers/FrontRouter';
 
@@ -26,13 +27,15 @@ const frontHeader = (
 const frontRouter = (
   <FrontRouter />
 );
-
+// component prevents updates
+// https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md
+// solution <UpdateBlocker location={location}>
 class FrontPage extends React.PureComponent {
   render() {
     const { location } = this.props;
     const authURLs = ['/login', '/register', '/resetpassword', '/forgotpassword'];
     const showAuthBlock = authURLs.indexOf(location.pathname) === -1;
-    return Page(frontMenu, showAuthBlock ? frontHeader : '', frontRouter);
+    return <Page menu={frontMenu} header={showAuthBlock ? frontHeader : ''} router={frontRouter} location={location} />;
   }
 }
 
@@ -42,4 +45,4 @@ FrontPage.propTypes = {
   }).isRequired,
 };
 
-export default FrontPage;
+export default withRouter(connect()(FrontPage));

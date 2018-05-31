@@ -6,7 +6,6 @@ import { getIsAuthorized } from '../../reducers/auth';
 import { loginRequest, logout } from '../../actions/auth';
 
 const mapStateToProps = state => ({
-  auth: state.auth,
   isAuthorized: getIsAuthorized(state),
 });
 

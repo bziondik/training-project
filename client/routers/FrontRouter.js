@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+
 import MainPage from '../components/Front/MainPage';
 import AboutPage from '../components/Front/AboutPage';
 import ExamplesPage from '../components/Front/ExamplesPage';
@@ -20,5 +21,6 @@ const FrontRouter = () => (
     <Route path="/resetpassword" component={ContentResetPasswordPage} />
   </Switch>
 );
+
 
 export default FrontRouter;

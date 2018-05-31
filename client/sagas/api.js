@@ -10,7 +10,7 @@ export const usersUrl = '/users';
 
 const instance = axios.create({
   baseURL: baseApiUrl,
-  timeout: 1000,
+  timeout: 6000,
   headers: {
     'Cache-Control': 'no-cache',
   },
@@ -35,5 +35,5 @@ export const resetPasswordApi = data => instance.post(resetPasswordUrl, data);
 export const getUsersApi = () => instance.get(usersUrl);
 export const getUserApi = id => instance.get(`${usersUrl}/${id}`);
 export const createUserApi = data => instance.post(usersUrl, data);
-export const updateUserApi = (id, data) => instance.put(`${usersUrl}/${id}`, data);
+export const updateUserApi = data => instance.put(`${usersUrl}/${data.id}`, data.changes);
 export const deleteUserApi = id => instance.delete(`${usersUrl}/${id}`);

@@ -19,6 +19,7 @@ function* forgotPasswordFlow(action) {
       actionSuccess: forgotPasswordSuccess,
       actionError: forgotPasswordError,
       data: action.payload,
+      isLoading: true,
     },
   );
 }
@@ -30,6 +31,7 @@ function* resetPasswordFlow(action) {
       actionSuccess: resetPasswordSuccess,
       actionError: resetPasswordError,
       data: action.payload,
+      isLoading: true,
     },
   );
 }

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
 
-import { clearNetworkErrors, networkError } from '../actions/network';
+import { clearNetworkErrors, networkError, networkShowLoading, networkCloseLoading } from '../actions/network';
 
 export const error = handleActions(
   {
@@ -25,10 +25,20 @@ export const message = handleActions(
   null,
 );
 
+export const isLoading = handleActions(
+  {
+    [networkShowLoading]: () => true,
+    [networkCloseLoading]: () => false,
+  },
+  false,
+);
+
 export default combineReducers({
   error,
   message,
+  isLoading,
 });
 
 export const getIsNetworkErrorPresent = state => state.network.error != null;
 export const getNetworkError = state => state.network.message;
+export const getIsLoading = state => state.network.isLoading;

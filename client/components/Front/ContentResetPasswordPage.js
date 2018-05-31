@@ -1,6 +1,5 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { message } from 'antd';
+import { Redirect, Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import ResetPasswordForm from './ResetPasswordForm';
@@ -9,25 +8,15 @@ class ContentResetPasswordPage extends React.PureComponent {
   constructor() {
     super();
     this.state = {
-      hideMessageRequest: null,
       isSend: false,
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.resetPassword.isFetching && !this.props.resetPassword.isFetching) {
-      if (this.state.hideMessageRequest) {
-        this.state.hideMessageRequest();
-      }
-    }
   }
 
   handleSubmitResetPasswordForm = (data) => {
     console.log('handleSubmitResetPasswordForm data=', data);
     const searchParams = new URLSearchParams(this.props.location.search);
     this.props.resetPasswordRequest({ ...data, resetToken: searchParams.get('token') });
-    const hide = message.loading('Please, wait..', 0);
-    this.setState({ hideMessageRequest: hide, isSend: true });
+    this.setState({ isSend: true });
   }
 
   render() {
@@ -65,10 +54,7 @@ ContentResetPasswordPage.propTypes = {
     search: PropTypes.string,
   }).isRequired,
   isAuthorized: PropTypes.bool.isRequired,
-  resetPassword: PropTypes.shape({
-    isFetching: PropTypes.bool,
-  }).isRequired,
   resetPasswordRequest: PropTypes.func.isRequired,
 };
 
-export default ContentResetPasswordPage;
+export default withRouter(ContentResetPasswordPage);

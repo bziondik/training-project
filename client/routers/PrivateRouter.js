@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -31,6 +31,6 @@ AdminRouter.propTypes = {
   component: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-export default connect(state => ({
+export default withRouter(connect(state => ({
   authorized: getIsAuthorized(state),
-}))(AdminRouter);
+}))(AdminRouter));

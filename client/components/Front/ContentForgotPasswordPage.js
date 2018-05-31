@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { message } from 'antd';
 import PropTypes from 'prop-types';
 
 import ForgotPasswordForm from './ForgotPasswordForm';
@@ -9,24 +8,14 @@ class ContentForgotPasswordPage extends React.PureComponent {
   constructor() {
     super();
     this.state = {
-      hideMessageRequest: null,
       isSend: false,
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.resetPassword.isFetching && !this.props.resetPassword.isFetching) {
-      if (this.state.hideMessageRequest) {
-        this.state.hideMessageRequest();
-      }
-    }
   }
 
   handleSubmitForgotPasswordForm = (data) => {
     console.log('handleSubmitResetPasswordForm data=', data);
     this.props.forgotPasswordRequest(data);
-    const hide = message.loading('Please, wait..', 0);
-    this.setState({ hideMessageRequest: hide, isSend: true });
+    this.setState({ isSend: true });
   }
 
   render() {
@@ -61,9 +50,6 @@ class ContentForgotPasswordPage extends React.PureComponent {
 
 ContentForgotPasswordPage.propTypes = {
   isAuthorized: PropTypes.bool.isRequired,
-  resetPassword: PropTypes.shape({
-    isFetching: PropTypes.bool,
-  }).isRequired,
   forgotPasswordRequest: PropTypes.func.isRequired,
 };
 

@@ -79,7 +79,7 @@ export default handleActions(
       ...state,
       isFetching: false,
       isFetched: true,
-      current: action.payload,
+      all: action.payload,
     }),
     [actions.userUpdateError]: (state, action) => ({
       ...state,

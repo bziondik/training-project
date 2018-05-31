@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Layout, Menu } from 'antd';
 
-import Page from '../../components/Common/Page';
+import Page from '../Common/Page';
 import AuthBlock from '../Common/AuthBlock';
 import AdminRouter from '../../routers/AdminRouter';
 
@@ -32,7 +32,11 @@ const adminRouter = (
 
 class AdminPage extends React.PureComponent {
   render() {
-    return Page(adminMenu(this.props.user && this.props.user.isAdmin), adminHeader, adminRouter);
+    return (<Page
+      menu={adminMenu(this.props.user && this.props.user.isAdmin)}
+      header={adminHeader}
+      router={adminRouter}
+    />);
   }
 }
 AdminPage.defaultProps = {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import createStore from './store';
+import createStore from './utils/store';
 import AppRouter from './routers/AppRouter';
 
 const store = createStore();

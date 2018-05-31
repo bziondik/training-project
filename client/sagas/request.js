@@ -1,6 +1,6 @@
 import { call, put, select } from 'redux-saga/effects';
 
-import { clearNetworkErrors, networkError } from '../actions/network';
+import { clearNetworkErrors, networkError, networkShowLoading, networkCloseLoading } from '../actions/network';
 import { logout } from '../actions/auth';
 import { getIsNetworkErrorPresent } from '../reducers/network';
 
@@ -10,6 +10,9 @@ export default function* (fn, settings) {
       yield put(clearNetworkErrors());
     }
     let response;
+    if (settings.isLoading) {
+      yield put(networkShowLoading());
+    }
     if (settings && settings.data) {
       response = yield call(fn, settings.data);
     } else {
@@ -27,6 +30,10 @@ export default function* (fn, settings) {
     const message = error.response && error.response.data && error.response.data.message;
     if (settings && settings.actionError) {
       yield put(settings.actionError(message));
+    }
+  } finally {
+    if (settings.isLoading) {
+      yield put(networkCloseLoading());
     }
   }
 }

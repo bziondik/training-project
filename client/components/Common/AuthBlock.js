@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { message, Button, Modal, Menu, Dropdown, Icon } from 'antd';
+import { Button, Modal, Menu, Dropdown, Icon } from 'antd';
 import PropTypes from 'prop-types';
 
 import LoginForm from '../../components/Front/LoginForm';
@@ -14,7 +14,6 @@ class AuthBlock extends React.PureComponent {
     this.state = {
       visibleLoginModal: false,
       visibleRegisterModal: false,
-      hideMessageRequest: null,
     };
   }
 
@@ -33,9 +32,6 @@ class AuthBlock extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if ((prevProps.auth.isLoginFetching && !this.props.auth.isLoginFetching) ||
       (prevProps.signup.isFetching && !this.props.signup.isFetching)) {
-      if (this.state.hideMessageRequest) {
-        this.state.hideMessageRequest();
-      }
       if (this.props.auth.error) {
         this.showLoginModal();
       }
@@ -61,15 +57,11 @@ class AuthBlock extends React.PureComponent {
     console.log('handleSubmitRegisterForm data=', data);
     this.props.signupRequest(data);
     this.handleCancelRegisterModal();
-    const hide = message.loading('Registration in progress..', 0);
-    this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLoginForm = (data) => {
     console.log('handleSubmitLoginForm data=', data);
     this.props.loginRequest(data);
     this.handleCancelLoginModal();
-    const hide = message.loading('Login in progress..', 0);
-    this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLogout = () => {
     this.props.logout();

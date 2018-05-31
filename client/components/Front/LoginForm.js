@@ -34,11 +34,11 @@ class NormalLoginForm extends React.Component {
             valuePropName: 'checked',
             initialValue: true,
           })(<Checkbox>Remember me</Checkbox>)}
-          <Link className="login-form__forgot" to="/forgotpassword">Forgot password</Link>
+          <Link className="login-form__forgot" to="forgotpassword">Forgot password</Link>
           <Button type="primary" htmlType="submit" className="login-form__button">
             Log in
           </Button>
-          Or <Link to="/register">register now!</Link>
+          Or <Link to="register">register now!</Link>
         </FormItem>
       </Form>
     );

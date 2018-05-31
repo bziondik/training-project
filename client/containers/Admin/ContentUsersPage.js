@@ -13,6 +13,7 @@ import {
 
 const mapStateToProps = state => ({
   users: state.users,
+  me: state.auth.user,
   isAuthorized: getIsAuthorized(state),
 });
 
