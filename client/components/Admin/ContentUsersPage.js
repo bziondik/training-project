@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { Table, Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 
-class ContentUserPage extends React.PureComponent {
+import RegisterForm from '../Front/RegisterForm';
+
+class ContentUsersPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       selectedUser: null,
+      visibleRegisterModal: false,
     };
   }
-
   componentDidMount() {
     this.props.usersRequest();
   }
@@ -67,6 +69,17 @@ class ContentUserPage extends React.PureComponent {
       { isAdmin: !this.state.selectedUser.isAdmin },
     );
   }
+  handleClickCreateUser = () => {
+    this.setState({ visibleRegisterModal: true });
+  }
+  handleCancelRegisterModal = () => {
+    this.setState({ visibleRegisterModal: false });
+  }
+  handleSubmitRegisterForm = (data) => {
+    console.log('handleSubmitRegisterForm data=', data);
+    this.props.userCreateRequest(data);
+    this.handleCancelRegisterModal();
+  }
   render() {
     const {
       all,
@@ -74,7 +87,7 @@ class ContentUserPage extends React.PureComponent {
     const columns = [{
       title: 'Name',
       dataIndex: 'username',
-      render: text => <Link to={`/users/${text}`}>{text}</Link>,
+      render: (text, record) => <Link to={`/admin/users/${record.id}`}>{text}</Link>,
     }, {
       title: 'Email',
       dataIndex: 'email',
@@ -107,13 +120,27 @@ class ContentUserPage extends React.PureComponent {
     }];
     console.log('all users =', all);
     if (all.length) {
-      return <Table rowKey="username" columns={columns} dataSource={all} />;
+      return (
+        <React.Fragment>
+          <Button onClick={this.handleClickCreateUser}>Create User</Button>
+          <Table rowKey="username" columns={columns} dataSource={all} />
+          <Modal
+            title="Register"
+            visible={this.state.visibleRegisterModal}
+            onCancel={this.handleCancelRegisterModal}
+            footer={null}
+            width={460}
+          >
+            <RegisterForm onSubmit={this.handleSubmitRegisterForm} />
+          </Modal>
+        </React.Fragment>
+      );
     }
     return null;
   }
 }
 
-ContentUserPage.propTypes = {
+ContentUsersPage.propTypes = {
   users: PropTypes.shape({
     all: PropTypes.array,
   }).isRequired,
@@ -123,6 +150,7 @@ ContentUserPage.propTypes = {
   usersRequest: PropTypes.func.isRequired,
   userDeleteRequest: PropTypes.func.isRequired,
   userUpdateRequest: PropTypes.func.isRequired,
+  userCreateRequest: PropTypes.func.isRequired,
 };
 
-export default ContentUserPage;
+export default ContentUsersPage;

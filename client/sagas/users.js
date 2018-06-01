@@ -21,23 +21,26 @@ function* usersFlow() {
     },
   );
 }
-function* userGetFlow() {
+function* userGetFlow(action) {
   yield call(
     requestFlow,
     getUserApi,
     {
       actionSuccess: actions.userGetSuccess,
       actionError: actions.userGetError,
+      data: action.payload,
     },
   );
 }
-function* userCreateFlow() {
+function* userCreateFlow(action) {
   yield call(
     requestFlow,
     createUserApi,
     {
       actionSuccess: actions.userCreateSuccess,
       actionError: actions.userCreateError,
+      data: action.payload,
+      isLoading: true,
     },
   );
 }

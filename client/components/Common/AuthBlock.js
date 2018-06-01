@@ -3,8 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { Button, Modal, Menu, Dropdown, Icon } from 'antd';
 import PropTypes from 'prop-types';
 
-import LoginForm from '../../components/Front/LoginForm';
-import RegisterForm from '../../components/Front/RegisterForm';
+import LoginForm from '../Front/LoginForm';
+import RegisterForm from '../Front/RegisterForm';
 
 const ButtonGroup = Button.Group;
 

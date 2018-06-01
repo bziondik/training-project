@@ -7,6 +7,7 @@ const forgotPassword = require('../controllers/forgotPassword');
 const resetPassword = require('../controllers/resetPassword');
 const deleteUser = require('../controllers/deleteUser');
 const updateUser = require('../controllers/updateUser');
+const createUser = require('../controllers/createUser');
 
 const router = express.Router();
 const User = mongoose.model('user');
@@ -48,6 +49,13 @@ router.get('/users', passport.authenticateJWT, passport.mustBeAdmin, (req, res, 
     .catch(next);
 });
 
+router.get('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, (req, res, next) => {
+  console.log('router.get id', req.params.id);
+  User.findById(req.params.id)
+    .then(user => res.status(200).json(user.toJSON()))
+    .catch(next);
+});
+router.post('/users', passport.authenticateJWT, passport.mustBeAdmin, createUser);
 router.delete('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, deleteUser);
 router.put('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, updateUser);
 

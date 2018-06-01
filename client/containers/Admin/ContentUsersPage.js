@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import ContentUserPageComponent from '../../components/Admin/ContentUsersPage';
+import ContentUsersPageComponent from '../../components/Admin/ContentUsersPage';
 
 import { getIsAuthorized } from '../../reducers/auth';
 import {
@@ -25,4 +25,4 @@ const mapDispatchToProps = {
   userDeleteRequest,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContentUserPageComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentUsersPageComponent);
