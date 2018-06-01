@@ -12,6 +12,7 @@ function* signupFlow(action) {
       actionSuccess: signupSuccess,
       actionError: signupError,
       data: action.payload,
+      isLoading: true,
     },
   );
 }

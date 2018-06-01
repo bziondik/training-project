@@ -1,31 +1,13 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { message } from 'antd';
 import PropTypes from 'prop-types';
 
 import RegisterForm from './RegisterForm';
 
 class ContentRegisterPage extends React.PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      hideMessageRequest: null,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.signup.isFetching && !this.props.signup.isFetching) {
-      if (this.state.hideMessageRequest) {
-        this.state.hideMessageRequest();
-      }
-    }
-  }
-
   handleSubmitRegisterForm = (data) => {
     console.log('handleSubmitRegisterForm data=', data);
     this.props.signupRequest(data);
-    const hide = message.loading('Registration in progress..', 0);
-    this.setState({ hideMessageRequest: hide });
   }
   handleSubmitLogout = () => {
     this.props.logout();
@@ -49,9 +31,6 @@ class ContentRegisterPage extends React.PureComponent {
 
 ContentRegisterPage.propTypes = {
   isAuthorized: PropTypes.bool.isRequired,
-  signup: PropTypes.shape({
-    isFetching: PropTypes.bool,
-  }).isRequired,
   signupRequest: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
 };
