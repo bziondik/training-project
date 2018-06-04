@@ -49,10 +49,10 @@ body {
 $height-drop-area: 200px;
 
 .create-calculator__drop-area {
-  background: rgb(182, 231, 169);
   margin: 20px;
   min-height: $height-drop-area;
-  border-radius: 10px;
+  padding: 20px;
+  border: 1px dashed #757272;
 }
 .create-calculator__drop-area__text {
   display: flex;
@@ -61,3 +61,10 @@ $height-drop-area: 200px;
   align-items: center;
   height: $height-drop-area;
 }
+.create-calculator__drop-element {
+  border: 1px dashed gray;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  cursor: move;
+  float: left;
+};
