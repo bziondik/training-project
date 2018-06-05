@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
         '/api': 'http://localhost:3000', // '*': 'http://[::1]:3000',
       },
       watchOptions: {
-        ignored: ['./server/', '/node_modules/'],
+        ignored: ['./server/', './node_modules/'],
       },
     },
     devtool: devMode ? 'inline-source-map' : 'source-map',

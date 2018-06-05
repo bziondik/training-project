@@ -1,7 +1,6 @@
 import React from 'react';
 import { DropTarget } from 'react-dnd';
 import PropTypes from 'prop-types';
-import { List } from 'antd';
 
 function collect(connect, monitor) {
   return {
@@ -16,11 +15,12 @@ class DnDEare extends React.Component {
       canDrop,
       isOver,
       connectDropTarget,
+      isEmpty,
       innerElements,
     } = this.props;
     const isActive = canDrop && isOver;
 
-    const isEmpty = (
+    const isEmptyRender = (
       <div className="create-calculator__drop-area">
         <div className="create-calculator__drop-area__text">
           {isActive ? 'Release to drop' : 'Drag a box here'}
@@ -30,23 +30,19 @@ class DnDEare extends React.Component {
 
     const notEmpty = elements => (
       <div className="create-calculator__drop-area">
-        <List
-          dataSource={elements}
-          renderItem={item => (
-            <List.Item>{item}</List.Item>
-          )}
-        />
+        {elements}
       </div>
     );
 
     return (
       connectDropTarget &&
-      connectDropTarget(innerElements.length ? notEmpty(innerElements) : isEmpty));
+      connectDropTarget(isEmpty ? isEmptyRender : notEmpty(innerElements)));
   }
 }
 
 DnDEare.propTypes = {
-  innerElements: PropTypes.arrayOf(PropTypes.element).isRequired,
+  isEmpty: PropTypes.bool.isRequired,
+  innerElements: PropTypes.element.isRequired,
   canDrop: PropTypes.bool.isRequired,
   isOver: PropTypes.bool.isRequired,
   connectDropTarget: PropTypes.func.isRequired,

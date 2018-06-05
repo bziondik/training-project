@@ -1,33 +1,42 @@
 import React from 'react';
-import { Row, Col, Input, List, Checkbox, Radio, Select, Button, Icon } from 'antd';
+import { Row, Col, Input, List, Button, Icon } from 'antd';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import DnDElement from './DnElement';
+import DnDElement from './DnDElement';
 import DnDEare from './DnDEare';
 
-const RadioGroup = Radio.Group;
-const { Option } = Select;
+import editBoxHOC from './EditBoxHOC';
+import InputElement from './Elements/InputElement';
+import CheckboxElement from './Elements/CheckboxElement';
 
 const elementsBox = [
   <div className="create-calculator__element"><Icon type="edit" /> Input</div>,
   <div className="create-calculator__element"><Icon type="check-square-o" /> Checkbox</div>,
-  <div className="create-calculator__element"><Icon type="plus-circle-o" /> Radio</div>,
-  <div className="create-calculator__element"><Icon type="profile" /> Select</div>,
+  // <div className="create-calculator__element"><Icon type="plus-circle-o" /> Radio</div>,
+  // <div className="create-calculator__element"><Icon type="profile" /> Select</div>,
 ];
-const elements = [ // eslint-disable-line
-  <Input placeholder="Input" />,
-  <Checkbox>Checkbox</Checkbox>,
-  <RadioGroup>
-    <Radio value={1}>Radio Button 1</Radio>
-    <Radio value={2}>Radio Button 2</Radio>
-  </RadioGroup>,
-  <Select defaultValue="lucy">
-    <Option value="jack">Jack</Option>
-    <Option value="lucy">Lucy</Option>
-    <Option value="disabled" disabled>Disabled</Option>
-    <Option value="Yiminghe">yiminghe</Option>
-  </Select>,
+const elements = [
+  InputElement,
+  CheckboxElement,
+  // <RadioGroup>
+  //   <Radio value={1}>Radio Button 1</Radio>
+  //   <Radio value={2}>Radio Button 2</Radio>
+  // </RadioGroup>,
+  // <Select defaultValue="lucy">
+  //   <Option value="jack">Jack</Option>
+  //   <Option value="lucy">Lucy</Option>
+  //   <Option value="disabled" disabled>Disabled</Option>
+  //   <Option value="Yiminghe">yiminghe</Option>
+  // </Select>,
+];
+const propsForElements = [
+  {
+    label: 'Label',
+  },
+  {
+    label: 'Checkbox',
+  },
 ];
 
 class ContentCreatePage extends React.Component {
@@ -35,15 +44,51 @@ class ContentCreatePage extends React.Component {
     super(props);
     this.state = {
       formElements: [],
-      isShowEditModal: false,
+      settings: [],
     };
   }
   onHandelDrop = (indexElement) => {
     console.log(indexElement);
-    this.setState({ formElements: [...this.state.formElements, elements[indexElement]] });
+    const EditElementBox = editBoxHOC(
+      elements[indexElement],
+      this.handleSaveElement,
+      this.handleDeleteElement,
+    );
+    const settings = propsForElements[indexElement];
+    settings.isChanged = false;
+    this.setState({
+      formElements: [
+        ...this.state.formElements,
+        EditElementBox,
+      ],
+      settings: [
+        ...this.state.settings,
+        settings,
+      ],
+    });
+  }
+  handleSaveElement = (index, settings) => {
+    const newSettings = this.state.settings.slice();
+    newSettings[index] = { ...settings, isChanged: true };
+    this.setState({ settings: newSettings });
+  }
+  handleDeleteElement = (index) => {
+    const newSettings = this.state.settings.slice();
+    newSettings.splice(index, 1);
+    const newFormElements = this.state.formElements.slice();
+    newFormElements.splice(index, 1);
+    this.setState({ formElements: newFormElements, settings: newSettings });
   }
   render() {
-    const { formElements } = this.state;
+    const { formElements, settings } = this.state;
+    const form = (
+      <List
+        dataSource={formElements}
+        renderItem={(EditElementBox, index) => (
+          <List.Item><EditElementBox index={index} settings={settings[index]} /></List.Item>
+        )}
+      />
+    );
     return (
       <Row>
         <Col xs={24} sm={24} md={16} lg={16}>
@@ -55,7 +100,7 @@ class ContentCreatePage extends React.Component {
           <Button className="create-calculator__button" type="primary">Save</Button>
           <Button className="create-calculator__button">Save as Templates</Button>
           <Button className="create-calculator__button">Cancel</Button>
-          <DnDEare innerElements={formElements} />
+          <DnDEare innerElements={form} isEmpty={formElements.length === 0} />
         </Col>
         <Col xs={24} sm={24} md={8} lg={8}>
           <List

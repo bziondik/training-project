@@ -68,3 +68,10 @@ $height-drop-area: 200px;
   cursor: move;
   float: left;
 };
+.ant-card-extra {
+  width: 100%;
+}
+.edit-element-box__header {
+  display: flex;
+  justify-content: space-between;
+}

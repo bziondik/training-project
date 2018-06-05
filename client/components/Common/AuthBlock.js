@@ -105,7 +105,10 @@ class AuthBlock extends React.PureComponent {
       const urlSettings = `/admin/user/${user._id}`; // eslint-disable-line
       return (
         <Menu onClick={this.handleUserMenuClick}>
-          <Menu.Item key="1"><NavLink to="/admin"> AdminPage </NavLink></Menu.Item>
+          <Menu.Item key="1"><NavLink to="/admin/create">New Calculator</NavLink></Menu.Item>
+          <Menu.Item key="2"><NavLink to="/admin/list">My Calculators</NavLink></Menu.Item>
+          <Menu.Item key="3"><NavLink to="/admin/templates">Templates</NavLink></Menu.Item>
+          {user.isAdmin && <Menu.Item key="4"><NavLink to="/admin/users">Users</NavLink></Menu.Item> }
           <Menu.Item key="2"><NavLink to={urlSettings}> Settings </NavLink></Menu.Item>
         </Menu>
       );
