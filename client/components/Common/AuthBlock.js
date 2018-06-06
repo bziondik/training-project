@@ -109,7 +109,7 @@ class AuthBlock extends React.PureComponent {
           <Menu.Item key="2"><NavLink to="/admin/list">My Calculators</NavLink></Menu.Item>
           <Menu.Item key="3"><NavLink to="/admin/templates">Templates</NavLink></Menu.Item>
           {user.isAdmin && <Menu.Item key="4"><NavLink to="/admin/users">Users</NavLink></Menu.Item> }
-          <Menu.Item key="2"><NavLink to={urlSettings}> Settings </NavLink></Menu.Item>
+          <Menu.Item key="5"><NavLink to={urlSettings}> Settings </NavLink></Menu.Item>
         </Menu>
       );
     };

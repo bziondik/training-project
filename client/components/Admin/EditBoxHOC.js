@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Icon, Modal } from 'antd';
+import { Card, Icon, Modal, Input, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 
 function editBoxHOC(ElementComponent, onSave, onDelete) {
@@ -10,6 +10,9 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
         isEdit: false,
         settings: { ...props.settings },
       };
+    }
+    onChangeVariable = (event) => {
+      this.setState({ variable: event.target.value });
     }
     showEditMode = () => {
       this.setState({ isEdit: true, settings: { ...this.props.settings } });
@@ -32,18 +35,17 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
         onOk: onDelete.bind(this, this.props.index),
       });
     };
-    handleChange = (event) => {
-      console.log(event.target.value);
+    handleChange = (newSettings) => {
+      console.log('handleChange ', newSettings);
       this.setState({
         settings: {
           ...this.state.settings,
-          isChanged: true,
-          [event.target.name]: event.target.value,
+          ...newSettings,
         },
       });
     }
     render() {
-      const { isEdit } = this.state;
+      const { isEdit, variable } = this.state;
       const isEditRender = (
         <Card
           style={{ width: 450 }}
@@ -53,7 +55,12 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
               <Icon type="close" onClick={this.closeEditMode} />
             </div>}
           actions={[
-            <Icon type="setting" />,
+            // <Icon type="setting" />,
+            <Input
+              placeholder="Variable Name"
+              value={this.state.variable}
+              onChange={this.onChangeVariable}
+            />,
             <Icon type="delete" onClick={this.handleOnDelete} />,
             <Icon type="save" onClick={this.handleOnSave} />,
           ]}
@@ -74,7 +81,11 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
               <Icon type="edit" onClick={this.showEditMode} />
             </div>}
           actions={[
+            <Tooltip title="Use this name in the result formula">
+              {variable}
+            </Tooltip>,
             <Icon type="delete" onClick={this.handleOnDelete} />,
+            '',
           ]}
         >
           <ElementComponent isEditMode={false} settings={this.props.settings} />

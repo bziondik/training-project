@@ -9,16 +9,18 @@ import DnDEare from './DnDEare';
 import editBoxHOC from './EditBoxHOC';
 import InputElement from './Elements/InputElement';
 import CheckboxElement from './Elements/CheckboxElement';
+import RadioGroupElement from './Elements/RadioGroupElement';
 
 const elementsBox = [
   <div className="create-calculator__element"><Icon type="edit" /> Input</div>,
   <div className="create-calculator__element"><Icon type="check-square-o" /> Checkbox</div>,
-  // <div className="create-calculator__element"><Icon type="plus-circle-o" /> Radio</div>,
+  <div className="create-calculator__element"><Icon type="plus-circle-o" /> Radio</div>,
   // <div className="create-calculator__element"><Icon type="profile" /> Select</div>,
 ];
 const elements = [
   InputElement,
   CheckboxElement,
+  RadioGroupElement,
   // <RadioGroup>
   //   <Radio value={1}>Radio Button 1</Radio>
   //   <Radio value={2}>Radio Button 2</Radio>
@@ -37,6 +39,20 @@ const propsForElements = [
   {
     label: 'Checkbox',
   },
+  {
+    radios: [
+      {
+        label: 'Radio1',
+        value: 'value1',
+        id: 1,
+      },
+      {
+        label: 'Radio2',
+        value: 'value2',
+        id: 2,
+      },
+    ],
+  },
 ];
 
 class ContentCreatePage extends React.Component {
@@ -54,8 +70,7 @@ class ContentCreatePage extends React.Component {
       this.handleSaveElement,
       this.handleDeleteElement,
     );
-    const settings = propsForElements[indexElement];
-    settings.isChanged = false;
+    const settings = JSON.parse(JSON.stringify(propsForElements[indexElement])); // deep clone
     this.setState({
       formElements: [
         ...this.state.formElements,
@@ -69,7 +84,7 @@ class ContentCreatePage extends React.Component {
   }
   handleSaveElement = (index, settings) => {
     const newSettings = this.state.settings.slice();
-    newSettings[index] = { ...settings, isChanged: true };
+    newSettings[index] = { ...settings, isSaved: true };
     this.setState({ settings: newSettings });
   }
   handleDeleteElement = (index) => {

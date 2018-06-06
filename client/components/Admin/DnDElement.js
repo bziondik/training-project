@@ -15,15 +15,17 @@ function collect(connect, monitor) {
 
 const boxSource = {
   beginDrag(props) {
-    return props;
+    return { index: props.index, onDrop: props.onDrop };
   },
 
   endDrag(props, monitor) {
     const item = monitor.getItem();
-    const dropResult = monitor.getDropResult();
+    const didDrop = monitor.didDrop();
+    // const dropResult = monitor.getDropResult();
 
-    if (dropResult) {
-      console.log(`You dropped ${item.toString()} into ${dropResult.toString()}!`);
+    // if (dropResult) {
+    if (didDrop) {
+      console.log(`You dropped ${item.toString()}!`);
       item.onDrop(item.index);
     }
   },

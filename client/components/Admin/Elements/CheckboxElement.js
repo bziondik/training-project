@@ -3,15 +3,41 @@ import PropTypes from 'prop-types';
 import { Row, Col, Input, Checkbox } from 'antd';
 
 class CheckboxElement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (state.isEditMode && !props.isEditMode) {
+      return {
+        isChanged: false,
+        isEditMode: props.isEditMode,
+      };
+    }
+    return {
+      isEditMode: props.isEditMode,
+    };
+  }
+  onChangeCheckboxElementLabel = (event) => {
+    console.log('onChangeCheckboxElementLabel ', event.target.value);
+    this.setState({ isChanged: true });
+    this.props.onChange({ label: event.target.value });
+  }
   render() {
-    const { isEditMode, settings: { label, isChanged }, onChange } = this.props;
+    const { isEditMode, settings: { label, isSaved } } = this.props;
+    const { isChanged } = this.state;
     const isEditRender = (
       <Row type="flex" justify="start">
         <Col>
           <Checkbox disabled />
         </Col>
         <Col>
-          <Input placeholder="Checkbox" name="label" value={isChanged ? label : ''} onChange={onChange} />
+          <Input
+            placeholder="Checkbox"
+            name="label"
+            value={isSaved || isChanged ? label : ''}
+            onChange={this.onChangeCheckboxElementLabel}
+          />
         </Col>
       </Row>
     );
@@ -26,7 +52,7 @@ CheckboxElement.propTypes = {
   isEditMode: PropTypes.bool.isRequired,
   settings: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    isChanged: PropTypes.bool.isRequired,
+    isSaved: PropTypes.bool,
   }).isRequired,
   onChange: PropTypes.func, // eslint-disable-line
 };
