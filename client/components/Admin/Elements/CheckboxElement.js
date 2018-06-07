@@ -18,6 +18,9 @@ class CheckboxElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
+  static getType() {
+    return 'Checkbox';
+  }
   onChangeCheckboxElementLabel = (event) => {
     console.log('onChangeCheckboxElementLabel ', event.target.value);
     this.setState({ isChanged: true });

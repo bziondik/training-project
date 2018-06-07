@@ -18,6 +18,9 @@ class InputElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
+  static getType() {
+    return 'Input';
+  }
   onChangeInputElementLabel = (event) => {
     console.log('onChangeInputElementLabel ', event.target.value);
     this.setState({ isChanged: true });

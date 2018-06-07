@@ -12,7 +12,10 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
       };
     }
     onChangeVariable = (event) => {
-      this.setState({ variable: event.target.value });
+      this.setState({ settings: { ...this.state.settings, variable: event.target.value } });
+    }
+    static getType() {
+      return ElementComponent.getType();
     }
     showEditMode = () => {
       this.setState({ isEdit: true, settings: { ...this.props.settings } });
@@ -45,7 +48,7 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
       });
     }
     render() {
-      const { isEdit, variable } = this.state;
+      const { isEdit, settings } = this.state;
       const isEditRender = (
         <Card
           style={{ width: 450 }}
@@ -58,7 +61,7 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
             // <Icon type="setting" />,
             <Input
               placeholder="Variable Name"
-              value={this.state.variable}
+              value={settings.variable}
               onChange={this.onChangeVariable}
             />,
             <Icon type="delete" onClick={this.handleOnDelete} />,
@@ -82,7 +85,7 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
             </div>}
           actions={[
             <Tooltip title="Use this name in the result formula">
-              {variable}
+              {settings.variable}
             </Tooltip>,
             <Icon type="delete" onClick={this.handleOnDelete} />,
             '',

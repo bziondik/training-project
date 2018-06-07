@@ -14,6 +14,7 @@ class RadioGroupElement extends React.Component {
   static getDerivedStateFromProps(props, state) {
     if (!state.isEditMode || (state.isEditMode && !props.isEditMode)) {
       return {
+        isChangedLabel: false,
         isChanged: props.settings.radios.map(radio => (
           { id: radio.id, label: false, value: false }
         )),
@@ -24,9 +25,17 @@ class RadioGroupElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
+  static getType() {
+    return 'RadioGroup';
+  }
   onChangeRadioGroupValue = (event) => {
     console.log('onChangeRadioGroupValue ', event.target.value);
     this.setState({ value: event.target.value });
+  }
+  onChangeLabel = (event) => {
+    console.log('onChangeLabel ', event.target.value);
+    this.setState({ isChangedLabel: true });
+    this.props.onChange({ label: event.target.value });
   }
   onChangeRadioElementLabel = (event) => {
     console.log('onChangeRadioElementLabel ', event.target.value);
@@ -73,7 +82,7 @@ class RadioGroupElement extends React.Component {
     this.props.onChange({ radios });
   }
   render() {
-    const { isEditMode, settings: { radios, isSaved } } = this.props;
+    const { isEditMode, settings: { label, radios, isSaved } } = this.props;
     const isShowRemove = radios.length > 2;
     const radioItemsIsEditRender = radios.map((radio, index) => (
       <Row key={radio.id}>
@@ -106,6 +115,12 @@ class RadioGroupElement extends React.Component {
     ));
     const isEditRender = (
       <React.Fragment>
+        <Input
+          addonBefore="Label:"
+          placeholder={label}
+          value={isSaved || this.state.isChangedLabel ? label : ''}
+          onChange={this.onChangeLabel}
+        />
         <RadioGroup>
           {radioItemsIsEditRender}
         </RadioGroup>
@@ -118,9 +133,16 @@ class RadioGroupElement extends React.Component {
       </Radio>
     ));
     const noEditRender = (
-      <RadioGroup onChange={this.onChangeRadioGroupValue} value={this.state.value}>
-        {radioItemsNoEditRender}
-      </RadioGroup>
+      <Row>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+          { label }
+        </Col>
+        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <RadioGroup onChange={this.onChangeRadioGroupValue} value={this.state.value}>
+            {radioItemsNoEditRender}
+          </RadioGroup>
+        </Col>
+      </Row>
     );
     return isEditMode ? isEditRender : noEditRender;
   }
