@@ -15,7 +15,7 @@ function collect(connect, monitor) {
 
 const boxSource = {
   beginDrag(props) {
-    return { index: props.index, onDrop: props.onDrop };
+    return { type: props.type, onDrop: props.onDrop };
   },
 
   endDrag(props, monitor) {
@@ -26,7 +26,7 @@ const boxSource = {
     // if (dropResult) {
     if (didDrop) {
       console.log(`You dropped ${item.toString()}!`);
-      item.onDrop(item.index);
+      item.onDrop(item.type);
     }
   },
 };

@@ -4,6 +4,7 @@ import { Form, Button, Divider } from 'antd';
 
 import {
   inputFormItem,
+  inputNumberFormItem,
   checkboxFormItem,
   radioGroupFormItem,
   selectFormItem,
@@ -53,14 +54,19 @@ class Calculator extends React.Component {
         if (formula) {
           const variables = Object.keys(values).join(', ');
           const variablesValues = Object.values(values).map((value) => {
-            if (Number.isNaN(parseInt(value, 10))) {
+            if (Number.isInteger(value) || Number.isNaN(parseFloat(value, 10))) {
               return value;
             }
-            return parseInt(value, 10);
+            console.log(value);
+            return parseFloat(value.replace(/,/, '.'), 10);
           });
-          const calculate = new Function(variables, formula); // eslint-disable-line
-          const result = calculate(...variablesValues);
-          this.setState({ result });
+          try {
+            const calculate = new Function(variables, formula); // eslint-disable-line
+            const result = calculate(...variablesValues);
+            this.setState({ result });
+          } catch (error) {
+            this.setState({ result: error.message });
+          }
         } else {
           this.setState({ result: 'Write formula for calculations!' });
         }
@@ -76,6 +82,9 @@ class Calculator extends React.Component {
       switch (element.type) {
         case constants.INPUT:
           formItems.push(inputFormItem(element, getFieldDecorator, formItemLayout));
+          break;
+        case constants.INPUT_NUMBER:
+          formItems.push(inputNumberFormItem(element, getFieldDecorator, formItemLayout));
           break;
         case constants.CHECKBOX:
           formItems.push(checkboxFormItem(element, getFieldDecorator, tailFormItemLayout));

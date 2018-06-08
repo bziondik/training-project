@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Col, Input, Select } from 'antd';
 
+import { SELECT } from '../../../utils/constants';
+
 const { Option } = Select;
 
 class SelectElement extends React.Component {
@@ -26,8 +28,8 @@ class SelectElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
-  static getType() {
-    return 'Select';
+  static getTypes() {
+    return [SELECT];
   }
   onChangeSelectValue = (event) => {
     console.log('onChangeSelectValue ', event.target.value);

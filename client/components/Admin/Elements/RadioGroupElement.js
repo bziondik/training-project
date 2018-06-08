@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Col, Input, Radio } from 'antd';
 
+import { RADIO_GROUP } from '../../../utils/constants';
+
 const RadioGroup = Radio.Group;
 
 class RadioGroupElement extends React.Component {
@@ -25,8 +27,8 @@ class RadioGroupElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
-  static getType() {
-    return 'RadioGroup';
+  static getTypes() {
+    return [RADIO_GROUP];
   }
   onChangeRadioGroupValue = (event) => {
     console.log('onChangeRadioGroupValue ', event.target.value);

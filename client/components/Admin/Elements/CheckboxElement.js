@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Input, Checkbox } from 'antd';
 
+import { CHECKBOX } from '../../../utils/constants';
+
 class CheckboxElement extends React.Component {
   constructor(props) {
     super(props);
@@ -18,8 +20,8 @@ class CheckboxElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
-  static getType() {
-    return 'Checkbox';
+  static getTypes() {
+    return [CHECKBOX];
   }
   onChangeCheckboxElementLabel = (event) => {
     console.log('onChangeCheckboxElementLabel ', event.target.value);

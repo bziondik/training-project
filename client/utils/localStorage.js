@@ -9,3 +9,15 @@ export function setTokenToLocalStorage(token) {
 export function removeTokenFromLocalStorage() {
   localStorage.removeItem('access_token');
 }
+
+export function getCalcDataFromLocalStorage() {
+  return localStorage.getItem('calc_data');
+}
+
+export function setCalcDataToLocalStorage(data) {
+  localStorage.setItem('calc_data', data);
+}
+
+export function removeCalcDataFromLocalStorage() {
+  localStorage.removeItem('calc_data');
+}

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Input } from 'antd';
+import { Row, Col, Input, InputNumber } from 'antd';
+
+import { INPUT, INPUT_NUMBER } from '../../../utils/constants';
 
 class InputElement extends React.Component {
   constructor(props) {
@@ -18,8 +20,8 @@ class InputElement extends React.Component {
       isEditMode: props.isEditMode,
     };
   }
-  static getType() {
-    return 'Input';
+  static getTypes() {
+    return [INPUT, INPUT_NUMBER];
   }
   onChangeInputElementLabel = (event) => {
     console.log('onChangeInputElementLabel ', event.target.value);
@@ -27,8 +29,12 @@ class InputElement extends React.Component {
     this.props.onChange({ label: event.target.value });
   }
   render() {
-    const { isEditMode, settings: { label, isSaved } } = this.props;
+    const { isEditMode, settings: { type, label, isSaved } } = this.props;
     const { isChanged } = this.state;
+    let ComponentInput = Input;
+    if (type === INPUT_NUMBER) {
+      ComponentInput = InputNumber;
+    }
     const isEditRender = (
       <Row>
         <Col xs={24} sm={24} md={8} lg={8} xl={8}>
@@ -40,7 +46,7 @@ class InputElement extends React.Component {
           />
         </Col>
         <Col xs={24} sm={24} md={16} lg={16} xl={16}>
-          <Input disabled />
+          <ComponentInput disabled />
         </Col>
       </Row>
     );
@@ -50,7 +56,7 @@ class InputElement extends React.Component {
           { label }
         </Col>
         <Col xs={24} sm={24} md={16} lg={16} xl={16}>
-          <Input />
+          <ComponentInput />
         </Col>
       </Row>
     );
@@ -61,6 +67,7 @@ class InputElement extends React.Component {
 InputElement.propTypes = {
   isEditMode: PropTypes.bool.isRequired,
   settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     isSaved: PropTypes.bool,
   }).isRequired,

@@ -1,4 +1,5 @@
 export const INPUT = 'Input';
+export const INPUT_NUMBER = 'InputNumber';
 export const CHECKBOX = 'Checkbox';
 export const RADIO_GROUP = 'RadioGroup';
 export const SELECT = 'Select';
@@ -6,6 +7,11 @@ export const SELECT = 'Select';
 export const PROPS_INPUT = {
   label: 'Label',
   type: INPUT,
+};
+
+export const PROPS_INPUT_NUMBER = {
+  label: 'Label',
+  type: INPUT_NUMBER,
 };
 
 export const PROPS_CHECKBOX = {

@@ -14,9 +14,6 @@ function editBoxHOC(ElementComponent, onSave, onDelete) {
     onChangeVariable = (event) => {
       this.setState({ settings: { ...this.state.settings, variable: event.target.value } });
     }
-    static getType() {
-      return ElementComponent.getType();
-    }
     showEditMode = () => {
       this.setState({ isEdit: true, settings: { ...this.props.settings } });
     }

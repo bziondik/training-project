@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Checkbox, Radio, Select } from 'antd';
+import { Form, Input, InputNumber, Checkbox, Radio, Select } from 'antd';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -13,6 +13,18 @@ export function inputFormItem(settings, getFieldDecorator, formItemLayout) {
       key={settings.variable}
     >
       {getFieldDecorator(settings.variable)(<Input />)}
+    </FormItem>
+  );
+}
+
+export function inputNumberFormItem(settings, getFieldDecorator, formItemLayout) {
+  return (
+    <FormItem
+      {...formItemLayout}
+      label={settings.label}
+      key={settings.variable}
+    >
+      {getFieldDecorator(settings.variable)(<InputNumber />)}
     </FormItem>
   );
 }
