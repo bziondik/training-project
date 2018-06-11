@@ -6,6 +6,7 @@ import signupWatcher from './signup';
 import resetPasswordWatcher from './resetPassword';
 import usersWatcher from './users';
 import messageWatcher from './message';
+import calculatorsWatcher from './calculators';
 
 export default function* () {
   yield fork(authFlow);
@@ -13,4 +14,5 @@ export default function* () {
   yield fork(resetPasswordWatcher);
   yield fork(usersWatcher);
   yield fork(messageWatcher);
+  yield fork(calculatorsWatcher);
 }

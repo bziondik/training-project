@@ -15,6 +15,7 @@ const sanitize = require('mongo-sanitize');
 mongoose.Promise = global.Promise;
 mongoose.connect(secret.database);
 require('./models/user');
+require('./models/calculators');
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');

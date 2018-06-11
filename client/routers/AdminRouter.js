@@ -3,7 +3,7 @@ import { Switch } from 'react-router-dom';
 
 import PrivateRouter from './PrivateRouter';
 import AdminMainPage from '../components/Admin/AdminMainPage';
-import ContentCreatePage from '../components/Admin/ContentCreatePage';
+import ContentCreatePage from '../containers/Admin/ContentCreatePage';
 import TempatesPage from '../components/Admin/TemplatesPage';
 import ListPage from '../components/Admin/ListPage';
 import ContentUsersPage from '../containers/Admin/ContentUsersPage';

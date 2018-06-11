@@ -37,3 +37,9 @@ export const getUserApi = id => instance.get(`${usersUrl}/${id}`);
 export const createUserApi = data => instance.post(usersUrl, data);
 export const updateUserApi = data => instance.put(`${usersUrl}/${data.id}`, data.changes);
 export const deleteUserApi = id => instance.delete(`${usersUrl}/${id}`);
+
+export const getCalcsApi = userId => instance.get(`${usersUrl}/${userId}/calculators`);
+export const getCalcApi = data => instance.get(`${usersUrl}/${data.userId}/calculators/${data.calcId}`);
+export const createCalcApi = data => instance.post(`${usersUrl}/${data.userId}/calculators`, data.settings);
+export const updateCalcApi = data => instance.put(`${usersUrl}/${data.userId}/calculators/${data.calcId}`, data.changes);
+export const deleteCalcApi = data => instance.delete(`${usersUrl}/${data.userId}/calculators/${data.calcId}`);

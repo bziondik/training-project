@@ -3,7 +3,9 @@ const bCrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 const config = require('../../secret');
 
-const userSchema = new mongoose.Schema(
+const { Schema } = mongoose;
+
+const userSchema = new Schema(
   {
     username: {
       type: String,

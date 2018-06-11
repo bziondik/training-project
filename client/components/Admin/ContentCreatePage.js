@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Input, List, Button, Icon, Card, Modal } from 'antd';
+import { Row, Col, Input, List, Button, Icon, Card, Modal, Form } from 'antd';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ import * as constants from '../../utils/constants';
 import {
   getCalcDataFromLocalStorage,
   setCalcDataToLocalStorage,
-  // removeCalcDataFromLocalStorage,
+  removeCalcDataFromLocalStorage,
 } from '../../utils/localStorage';
 
 const elements = [
@@ -55,6 +55,7 @@ const elements = [
 ];
 
 const { TextArea } = Input;
+const FormItem = Form.Item;
 
 const examples = [
   'return var0 + var1 * var2',
@@ -86,6 +87,7 @@ class ContentCreatePage extends React.Component {
         settings,
         formula: saveData.formula,
         name: '',
+        isErrorName: false,
       };
     } else {
       this.state = {
@@ -93,6 +95,7 @@ class ContentCreatePage extends React.Component {
         settings: [],
         formula: '',
         name: '',
+        isErrorName: false,
       };
     }
   }
@@ -154,14 +157,22 @@ class ContentCreatePage extends React.Component {
   }
   handleChangeName = (event) => {
     console.log(event.target.value);
-    this.setState({ name: event.target.value });
+    this.setState({ name: event.target.value, isErrorName: false });
   }
   handleSaveCalc = () => {
     if (this.state.name) {
       const { settings, formula, name } = this.state;
       const { me, calcCreateRequest } = this.props;
-      calcCreateRequest(me.id, { settings, formula, name });
-    } // else error on input
+      calcCreateRequest(me.id, {
+        settings,
+        formula,
+        name,
+        isTemplate: false,
+      });
+      removeCalcDataFromLocalStorage();
+    } else {
+      this.setState({ isErrorName: true });
+    }
   }
   render() {
     const {
@@ -169,6 +180,7 @@ class ContentCreatePage extends React.Component {
       settings,
       formula,
       name,
+      isErrorName,
     } = this.state;
     const form = (
       <List
@@ -179,15 +191,19 @@ class ContentCreatePage extends React.Component {
       />
     );
     const variables = settings.map(elem => <li key={elem.variable}>{elem.variable}</li>);
+    let propsErrorName = {};
+    if (isErrorName) {
+      propsErrorName = {
+        validateStatus: 'error',
+        help: 'Enter name for calculator',
+      };
+    }
     return (
       <Row>
         <Col xs={24} sm={24} md={16} lg={16}>
-          <Row>
-            <Col xs={24} sm={24} md={8} lg={6}>New Calculator</Col>
-            <Col xs={20} sm={20} md={14} lg={12}>
-              <Input placeholder="Write name for new calculator" value={name} onChange={this.handleChangeName} />
-            </Col>
-          </Row>
+          <FormItem label="New Calculator" {...propsErrorName} >
+            <Input placeholder="Write name for new calculator" value={name} onChange={this.handleChangeName} />
+          </FormItem>
           <br />
           <Button className="create-calculator__button" type="primary" onClick={this.handleSaveCalc}>Save</Button>
           <Button className="create-calculator__button">Save as Templates</Button>

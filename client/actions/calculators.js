@@ -8,7 +8,10 @@ export const calcGetRequest = createAction('CALC_GET_REQUESTING');
 export const calcGetSuccess = createAction('CALC_GET_SUCCESS');
 export const calcGetError = createAction('CALC_GET_ERROR');
 
-export const calcCreateRequest = createAction('CALC_CREATE_REQUESTING', (id, data) => ({ id, data }));
+export const calcCreateRequest = createAction(
+  'CALC_CREATE_REQUESTING',
+  (id, settings, isTemplate = false) => ({ userId: id, settings, isTemplate }),
+);
 export const calcCreateSuccess = createAction('CALC_CREATE_SUCCESS');
 export const calcCreateError = createAction('CALC_CREATE_ERROR');
 
