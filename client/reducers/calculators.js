@@ -49,5 +49,5 @@ export default handleActions(
   initialState,
 );
 
-export const getCalculators = state => state.all.filter(calc => !calc.isTemplate);
-export const getTemplates = state => state.all.filter(calc => calc.isTemplate);
+export const getCalculators = state => state.calculators.all.filter(calc => !calc.isTemplate);
+export const getTemplates = state => state.calculators.all.filter(calc => calc.isTemplate);

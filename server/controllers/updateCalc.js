@@ -4,7 +4,6 @@ const User = mongoose.model('user');
 const Calculator = mongoose.model('calculator');
 
 module.exports = async function updateCalc(req, res, next) {
-  console.log('req.baseUrl', req.baseUrl);
   try {
     const userById = await User.findById({ id: req.params.userid });
     if (userById) {

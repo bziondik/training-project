@@ -10,7 +10,7 @@ export const calcGetError = createAction('CALC_GET_ERROR');
 
 export const calcCreateRequest = createAction(
   'CALC_CREATE_REQUESTING',
-  (id, settings, isTemplate = false) => ({ userId: id, settings, isTemplate }),
+  (id, settings) => ({ userId: id, settings }),
 );
 export const calcCreateSuccess = createAction('CALC_CREATE_SUCCESS');
 export const calcCreateError = createAction('CALC_CREATE_ERROR');
@@ -19,6 +19,6 @@ export const calcUpdateRequest = createAction('CALC_UPDATE_REQUESTING', (id, cha
 export const calcUpdateSuccess = createAction('CALC_UPDATE_SUCCESS');
 export const calcUpdateError = createAction('CALC_UPDATE_ERROR');
 
-export const calcDeleteRequest = createAction('CALC_DELETE_REQUESTING');
+export const calcDeleteRequest = createAction('CALC_DELETE_REQUESTING', (userId, calcId) => ({ userId, calcId }));
 export const calcDeleteSuccess = createAction('CALC_DELETE_SUCCESS');
 export const calcDeleteError = createAction('CALC_DELETE_ERROR');

@@ -159,7 +159,7 @@ class ContentCreatePage extends React.Component {
     console.log(event.target.value);
     this.setState({ name: event.target.value, isErrorName: false });
   }
-  handleSaveCalc = () => {
+  saveCalc = (isTemplate = false) => {
     if (this.state.name) {
       const { settings, formula, name } = this.state;
       const { me, calcCreateRequest } = this.props;
@@ -167,12 +167,18 @@ class ContentCreatePage extends React.Component {
         settings,
         formula,
         name,
-        isTemplate: false,
+        isTemplate,
       });
       removeCalcDataFromLocalStorage();
     } else {
       this.setState({ isErrorName: true });
     }
+  }
+  handleSaveCalc = () => {
+    this.saveCalc();
+  }
+  handleSaveTemplate = () => {
+    this.saveCalc(true);
   }
   render() {
     const {
@@ -206,7 +212,7 @@ class ContentCreatePage extends React.Component {
           </FormItem>
           <br />
           <Button className="create-calculator__button" type="primary" onClick={this.handleSaveCalc}>Save</Button>
-          <Button className="create-calculator__button">Save as Templates</Button>
+          <Button className="create-calculator__button" onClick={this.handleSaveTemplate}>Save as Templates</Button>
           <Button className="create-calculator__button">Cancel</Button>
           <Row>
             <Col xs={24} sm={24} md={10} lg={10}>
@@ -247,7 +253,7 @@ class ContentCreatePage extends React.Component {
 ContentCreatePage.propTypes = {
   calcCreateRequest: PropTypes.func.isRequired,
   me: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
   }).isRequired,
 };
 

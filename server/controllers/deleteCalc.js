@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
-const User = mongoose.model('user');
 const Calculator = mongoose.model('calculator');
 
 module.exports = async function deleteCalc(req, res, next) {
-  console.log('req.baseUrl', req.baseUrl);
   try {
-    const userById = await User.findById({ id: req.params.userid });
-    if (userById) {
-      res.status(400);
-      return res.json({ message: 'User with such id does not exists' });
+    if (req.params.userid !== req.user.id) { // request may do only user or admin
+      res.status(403);
+      return res.json({ message: 'Please, login again' });
     }
     const delCalc = await Calculator.findByIdAndRemove(req.params.calcid);
     console.log('!!!->then findByIdAndRemove calc=', delCalc);

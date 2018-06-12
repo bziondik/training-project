@@ -5,7 +5,6 @@ const User = mongoose.model('user');
 module.exports = async function updateUser(req, res, next) {
   try {
     const userCurrent = await User.findById(req.params.id);
-    console.log('!!!->then findById userCurrent=', userCurrent);
     userCurrent.isAdmin = req.body.isAdmin;
     const savedUser = await userCurrent.save();
     console.log('!!!->then save savedUser=', savedUser);

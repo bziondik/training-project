@@ -31,6 +31,7 @@ calculatorSchema.methods.toJSON = function () {
     name: this.name,
     settings: this.settings,
     formula: this.formula,
+    isTemplate: this.isTemplate,
     createdAt: this.createdAt,
   };
 };

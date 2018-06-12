@@ -20,17 +20,11 @@ const Calculator = mongoose.model('calculator');
 
 router.post('/saveNewUser', saveNewUser);
 
-router.post('/login', passport.authenticateLogin, async (req, res) => {
-  console.log('router.post login');
-  console.log('req.body =', req.body);
-  console.log('req.user =', req.user);
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(1);
-    }, 3000);
-  });
-  return res.status(200).json(req.user.toAuthJSON());
-});
+router.post(
+  '/login',
+  passport.authenticateLogin,
+  async (req, res) => res.status(200).json(req.user.toAuthJSON()),
+);
 
 router.post('/logout', (req, res) => {
   req.logout();
@@ -47,7 +41,6 @@ router.post('/resetpassword', resetPassword);
 
 // users
 router.get('/users', passport.authenticateJWT, passport.mustBeAdmin, (req, res, next) => {
-  console.log('router.get users');
   User.find({})
     .then((users) => {
       const usersToFront = users.map(user => user.toJSON());
@@ -58,7 +51,6 @@ router.get('/users', passport.authenticateJWT, passport.mustBeAdmin, (req, res, 
 
 // CRUD users
 router.get('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, (req, res, next) => {
-  console.log('router.get id', req.params.id);
   User.findById(req.params.id)
     .then(user => res.status(200).json(user.toJSON()))
     .catch(next);
@@ -68,8 +60,7 @@ router.delete('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, dele
 router.put('/users/:id', passport.authenticateJWT, passport.mustBeAdmin, updateUser);
 
 // calculators
-router.get('/users/:userid/calcs', passport.authenticateJWT, (req, res, next) => {
-  console.log('router.get userid', req.params.userid);
+router.get('/users/:userid/calculators', passport.authenticateJWT, (req, res, next) => {
   Calculator.find({ author: req.params.userid })
     .then((calcs) => {
       const calcsToFront = calcs.map(calc => calc.toJSON());
@@ -80,8 +71,6 @@ router.get('/users/:userid/calcs', passport.authenticateJWT, (req, res, next) =>
 
 // CRUD calculators
 router.get('/users/:userid/calculators/:calcid', passport.authenticateJWT, (req, res, next) => {
-  console.log('router.get userid', req.params.userid);
-  console.log('router.get calcid', req.params.calcid);
   Calculator.findOne({ id: req.params.calcid, author: req.params.userid })
     .then(calc => res.status(200).json(calc.toJSON()))
     .catch(next);

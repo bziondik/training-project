@@ -69,7 +69,7 @@ function* calcDeleteFlow(action) {
 }
 
 function* calculatorsWatcher() {
-  yield takeEvery(actions.calcGetRequest, calcsFlow);
+  yield takeEvery(actions.calcsRequest, calcsFlow);
   yield takeEvery(actions.calcGetRequest, calcGetFlow);
   yield takeEvery(actions.calcCreateRequest, calcCreateFlow);
   yield takeEvery(actions.calcUpdateRequest, calcUpdateFlow);
