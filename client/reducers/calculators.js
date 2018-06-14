@@ -33,13 +33,9 @@ export default handleActions(
       ...state,
       all: action.payload,
     }),
-    [actions.calcUpdateRequest]: state => ({
-      ...state,
-      current: null,
-    }),
     [actions.calcUpdateSuccess]: (state, action) => ({
       ...state,
-      all: action.payload,
+      current: action.payload,
     }),
     [actions.calcDeleteSuccess]: (state, action) => ({
       ...state,
@@ -51,3 +47,4 @@ export default handleActions(
 
 export const getCalculators = state => state.calculators.all.filter(calc => !calc.isTemplate);
 export const getTemplates = state => state.calculators.all.filter(calc => calc.isTemplate);
+export const getCalc = state => state.calculators.current;

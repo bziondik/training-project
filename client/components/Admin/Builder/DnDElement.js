@@ -21,9 +21,7 @@ const boxSource = {
   endDrag(props, monitor) {
     const item = monitor.getItem();
     const didDrop = monitor.didDrop();
-    // const dropResult = monitor.getDropResult();
 
-    // if (dropResult) {
     if (didDrop) {
       console.log(`You dropped ${item.toString()}!`);
       item.onDrop(item.type);

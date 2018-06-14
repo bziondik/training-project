@@ -25,7 +25,10 @@ class ContentCalcsPage extends React.PureComponent {
   clearSelectedCalc = () => {
     this.setState({ selectedCalc: null });
   }
-
+  handelCaclEdit = (record) => {
+    console.log(record);
+    this.props.history.push(`/admin/edit/${record.id}`);
+  };
   handleCalcDelete = (record) => {
     console.log(record);
     this.setState({ selectedCalc: record });
@@ -53,12 +56,16 @@ class ContentCalcsPage extends React.PureComponent {
       title: 'Action',
       key: 'action',
       render: (text, record) => {
-        const handelClickDelete = () => {
+        const onClickEdit = () => {
+          this.handelCaclEdit(record);
+        };
+        const onClickDelete = () => {
           this.handleCalcDelete(record);
         };
         return (
           <React.Fragment>
-            <Button shape="circle" onClick={handelClickDelete} icon="delete" />
+            <Button shape="circle" onClick={onClickEdit} icon="edit" />
+            <Button shape="circle" onClick={onClickDelete} icon="delete" />
           </React.Fragment>
         );
       },
@@ -87,6 +94,9 @@ ContentCalcsPage.propTypes = {
   }).isRequired,
   calcsRequest: PropTypes.func.isRequired,
   calcDeleteRequest: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 export default ContentCalcsPage;

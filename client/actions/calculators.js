@@ -4,7 +4,7 @@ export const calcsRequest = createAction('CALCS_REQUESTING');
 export const calcsSuccess = createAction('CALCS_SUCCESS');
 export const calcsError = createAction('CALCS_ERROR');
 
-export const calcGetRequest = createAction('CALC_GET_REQUESTING');
+export const calcGetRequest = createAction('CALC_GET_REQUESTING', (userId, calcId) => ({ userId, calcId }));
 export const calcGetSuccess = createAction('CALC_GET_SUCCESS');
 export const calcGetError = createAction('CALC_GET_ERROR');
 
@@ -15,7 +15,7 @@ export const calcCreateRequest = createAction(
 export const calcCreateSuccess = createAction('CALC_CREATE_SUCCESS');
 export const calcCreateError = createAction('CALC_CREATE_ERROR');
 
-export const calcUpdateRequest = createAction('CALC_UPDATE_REQUESTING', (id, changes) => ({ id, changes }));
+export const calcUpdateRequest = createAction('CALC_UPDATE_REQUESTING', (userId, calcId, changes) => ({ userId, calcId, changes }));
 export const calcUpdateSuccess = createAction('CALC_UPDATE_SUCCESS');
 export const calcUpdateError = createAction('CALC_UPDATE_ERROR');
 

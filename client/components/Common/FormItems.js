@@ -12,7 +12,10 @@ export function inputFormItem(settings, getFieldDecorator, formItemLayout) {
       label={settings.label}
       key={settings.variable}
     >
-      {getFieldDecorator(settings.variable)(<Input />)}
+      {getFieldDecorator(
+        settings.variable,
+        { rules: [{ required: true, message: `${settings.label} is required!` }] },
+      )(<Input />)}
     </FormItem>
   );
 }
@@ -24,7 +27,10 @@ export function inputNumberFormItem(settings, getFieldDecorator, formItemLayout)
       label={settings.label}
       key={settings.variable}
     >
-      {getFieldDecorator(settings.variable)(<InputNumber />)}
+      {getFieldDecorator(
+        settings.variable,
+        { rules: [{ required: true, message: `${settings.label} is required!` }] },
+      )(<InputNumber />)}
     </FormItem>
   );
 }
@@ -48,7 +54,10 @@ export function radioGroupFormItem(settings, getFieldDecorator, formItemLayout) 
       label={settings.label}
       key={settings.variable}
     >
-      {getFieldDecorator(settings.variable)( // eslint-disable-line
+      {getFieldDecorator(
+        settings.variable,
+        { rules: [{ required: true, message: 'Chose the option!' }] },
+      )( // eslint-disable-line
         <RadioGroup>
           {settings.radios.map(radio => (
             <Radio value={radio.value} key={radio.id}>{radio.label}</Radio>
@@ -65,7 +74,10 @@ export function selectFormItem(settings, getFieldDecorator, formItemLayout) {
       label={settings.label}
       key={settings.variable}
     >
-      {getFieldDecorator(settings.variable)( // eslint-disable-line
+      {getFieldDecorator(
+        settings.variable,
+        { rules: [{ required: true, message: 'Chose the option!' }] },
+      )( // eslint-disable-line
         <Select placeholder={settings.placeholder}>
           {settings.options.map(option => (
             <Option value={option.value} key={option.id}>{option.label}</Option>

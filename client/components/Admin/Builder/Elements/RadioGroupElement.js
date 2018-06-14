@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Col, Input, Radio } from 'antd';
 
-import { RADIO_GROUP } from '../../../utils/constants';
+import { RADIO_GROUP } from '../../../../utils/constants';
 
 const RadioGroup = Radio.Group;
 

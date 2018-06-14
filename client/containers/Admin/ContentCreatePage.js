@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import ContentCreatePageComponent from '../../components/Admin/ContentCreatePage';
+import ContentCreatePageComponent from '../../components/Admin/Builder/DataFromLS';
 
 import { calcCreateRequest } from '../../actions/calculators';
 

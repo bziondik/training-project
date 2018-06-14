@@ -17,8 +17,8 @@ function* calcsFlow(action) {
     {
       actionSuccess: actions.calcsSuccess,
       actionError: actions.calcsError,
-      isLoading: true,
       data: action.payload,
+      isLoading: true,
     },
   );
 }
@@ -30,6 +30,7 @@ function* calcGetFlow(action) {
       actionSuccess: actions.calcGetSuccess,
       actionError: actions.calcGetError,
       data: action.payload,
+      isLoading: true,
     },
   );
 }

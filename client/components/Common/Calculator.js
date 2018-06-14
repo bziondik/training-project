@@ -78,7 +78,6 @@ class Calculator extends React.Component {
     const { result } = this.state;
     const formItems = [];
     settings.forEach((element) => {
-      console.log('switch ', element.type);
       switch (element.type) {
         case constants.INPUT:
           formItems.push(inputFormItem(element, getFieldDecorator, formItemLayout));
@@ -105,7 +104,7 @@ class Calculator extends React.Component {
         <FormItem {...tailFormItemLayout}>
           <Button htmlType="submit" type="primary">Calculate</Button>
         </FormItem>
-        {result && <Divider>Result: {result}</Divider>}
+        {result !== undefined && <Divider>Result: {result}</Divider>}
       </Form>
     );
   }
@@ -116,7 +115,6 @@ Calculator.defaultProps = {
 Calculator.propTypes = {
   settings: PropTypes.arrayOf(PropTypes.object).isRequired,
   formula: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
   form: PropTypes.shape({
     getFieldDecorator: PropTypes.func.isRequired,
     validateFields: PropTypes.func.isRequired,

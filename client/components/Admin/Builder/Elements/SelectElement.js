@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Col, Input, Select } from 'antd';
 
-import { SELECT } from '../../../utils/constants';
+import { SELECT } from '../../../../utils/constants';
 
 const { Option } = Select;
 

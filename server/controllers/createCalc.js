@@ -4,7 +4,7 @@ const Calculator = mongoose.model('calculator');
 
 module.exports = async function createCalculator(req, res, next) {
   try {
-    if (req.params.userid !== req.user.id) { // request may do only user or admin
+    if (req.params.userid !== req.user.id) { // request may do only user
       res.status(403);
       return res.json({ message: 'Please, login again' });
     }

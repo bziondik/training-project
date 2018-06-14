@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Input, Checkbox } from 'antd';
 
-import { CHECKBOX } from '../../../utils/constants';
+import { CHECKBOX } from '../../../../utils/constants';
 
 class CheckboxElement extends React.Component {
   constructor(props) {

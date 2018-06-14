@@ -14,12 +14,7 @@ import CheckboxElement from './Elements/CheckboxElement';
 import RadioGroupElement from './Elements/RadioGroupElement';
 import SelectElement from './Elements/SelectElement';
 
-import * as constants from '../../utils/constants';
-import {
-  getCalcDataFromLocalStorage,
-  setCalcDataToLocalStorage,
-  removeCalcDataFromLocalStorage,
-} from '../../utils/localStorage';
+import * as constants from '../../../utils/constants';
 
 const elements = [
   {
@@ -63,52 +58,31 @@ const examples = [
   'return ( var0==1 ) ? var1 : var2',
 ];
 
-class ContentCreatePage extends React.Component {
+class EditCreatePage extends React.Component {
   constructor(props) {
     super(props);
-    let saveData = getCalcDataFromLocalStorage();
-    if (saveData) {
-      console.log(saveData);
-      saveData = JSON.parse(saveData);
-      const formElements = [];
-      const settings = [];
-      saveData.settings.forEach((settingsForElement) => {
-        const element = elements.find(elem => elem.type === settingsForElement.type);
-        const EditElementBox = editBoxHOC(
-          element.component,
-          this.handleSaveElement,
-          this.handleDeleteElement,
-        );
-        formElements.push(EditElementBox);
-        settings.push(settingsForElement);
-      });
-      this.state = {
-        formElements,
-        settings,
-        formula: saveData.formula,
-        name: '',
-        isErrorName: false,
-      };
-    } else {
-      this.state = {
-        formElements: [],
-        settings: [],
-        formula: '',
-        name: '',
-        isErrorName: false,
-      };
-    }
+    const formElements = props.settings.length > 0 ? this.createFormElements(props.settings) : [];
+    this.state = {
+      formElements,
+      settings: props.settings,
+      formula: props.formula,
+      name: props.name,
+      isErrorName: false,
+    };
   }
   onHandelDrop = (type) => {
     console.log(type);
+    const EditElementBox = this.createElement(type);
     const element = elements.find(elem => elem.type === type);
-    const EditElementBox = editBoxHOC(
-      element.component,
-      this.handleSaveElement,
-      this.handleDeleteElement,
-    );
     const settings = JSON.parse(JSON.stringify(element.props)); // deep clone
-    settings.variable = `var${this.state.formElements.length}`;
+    if (this.state.settings.length) {
+      settings.id = this.state.settings[this.state.settings.length - 1].id + 1;
+      settings.variable = `var${settings.id}`;
+    } else {
+      settings.id = 0;
+      settings.variable = 'var0';
+    }
+
     this.setState({
       formElements: [
         ...this.state.formElements,
@@ -122,19 +96,26 @@ class ContentCreatePage extends React.Component {
   }
   onChangeFormula = (event) => {
     this.setState({ formula: event.target.value });
-    setCalcDataToLocalStorage(JSON.stringify({
-      settings: this.state.settings,
-      formula: event.target.value,
-    }));
+    this.props.onChange(this.state.settings, event.target.value, this.state.name);
   };
+  createElement = (type) => {
+    const element = elements.find(elem => elem.type === type);
+    return editBoxHOC(
+      element.component,
+      this.handleSaveElement,
+      this.handleDeleteElement,
+    );
+  };
+  createFormElements = settings => settings.map(settingsForElement => (
+    this.createElement(settingsForElement.type)
+  ));
   handleSaveElement = (index, settings) => {
     const newSettings = this.state.settings.slice();
     newSettings[index] = { ...settings, isSaved: true };
     this.setState({ settings: newSettings });
-    setCalcDataToLocalStorage(JSON.stringify({
-      settings: newSettings,
-      formula: this.state.formula,
-    }));
+    if (this.props.onChange) {
+      this.props.onChange(newSettings, this.state.formula, this.state.name);
+    }
   }
   handleDeleteElement = (index) => {
     const newSettings = this.state.settings.slice();
@@ -142,6 +123,9 @@ class ContentCreatePage extends React.Component {
     const newFormElements = this.state.formElements.slice();
     newFormElements.splice(index, 1);
     this.setState({ formElements: newFormElements, settings: newSettings });
+    if (this.props.onChange) {
+      this.props.onChange(newSettings, this.state.formula, this.state.name);
+    }
   }
   infoExamples = () => {
     Modal.info({
@@ -158,18 +142,19 @@ class ContentCreatePage extends React.Component {
   handleChangeName = (event) => {
     console.log(event.target.value);
     this.setState({ name: event.target.value, isErrorName: false });
+    if (this.props.onChange) {
+      this.props.onChange(this.state.settings, this.state.formula, event.target.value);
+    }
   }
   saveCalc = (isTemplate = false) => {
     if (this.state.name) {
       const { settings, formula, name } = this.state;
-      const { me, calcCreateRequest } = this.props;
-      calcCreateRequest(me.id, {
+      this.props.onSave({
         settings,
         formula,
         name,
         isTemplate,
       });
-      removeCalcDataFromLocalStorage();
     } else {
       this.setState({ isErrorName: true });
     }
@@ -250,11 +235,19 @@ class ContentCreatePage extends React.Component {
   }
 }
 
-ContentCreatePage.propTypes = {
-  calcCreateRequest: PropTypes.func.isRequired,
-  me: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-  }).isRequired,
+EditCreatePage.defaultProps = {
+  settings: [],
+  formula: '',
+  name: '',
+  onSave: null,
+  onChange: null,
+};
+EditCreatePage.propTypes = {
+  settings: PropTypes.arrayOf(PropTypes.object),
+  formula: PropTypes.string,
+  name: PropTypes.string,
+  onSave: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
-export default DragDropContext(HTML5Backend)(ContentCreatePage);
+export default DragDropContext(HTML5Backend)(EditCreatePage);

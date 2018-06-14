@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Input, InputNumber } from 'antd';
 
-import { INPUT, INPUT_NUMBER } from '../../../utils/constants';
+import { INPUT, INPUT_NUMBER } from '../../../../utils/constants';
 
 class InputElement extends React.Component {
   constructor(props) {

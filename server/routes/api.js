@@ -71,12 +71,12 @@ router.get('/users/:userid/calculators', passport.authenticateJWT, (req, res, ne
 
 // CRUD calculators
 router.get('/users/:userid/calculators/:calcid', passport.authenticateJWT, (req, res, next) => {
-  Calculator.findOne({ id: req.params.calcid, author: req.params.userid })
+  Calculator.findOne({ _id: req.params.calcid, author: req.params.userid })
     .then(calc => res.status(200).json(calc.toJSON()))
     .catch(next);
 });
 router.post('/users/:userid/calculators', passport.authenticateJWT, createCalc);
 router.delete('/users/:userid/calculators/:calcid', passport.authenticateJWT, deleteCalc);
-router.put('/users/:userid/calculators', passport.authenticateJWT, updateCalc);
+router.put('/users/:userid/calculators/:calcid', passport.authenticateJWT, updateCalc);
 
 module.exports = router;

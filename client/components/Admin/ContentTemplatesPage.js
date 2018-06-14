@@ -10,7 +10,7 @@ class ContentTemplatesPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTempl: null,
+      idSelectTempl: null,
     };
   }
   componentDidMount() {
@@ -26,16 +26,15 @@ class ContentTemplatesPage extends React.PureComponent {
     });
   };
   clearSelectedTempl = () => {
-    this.setState({ selectedTempl: null });
+    this.setState({ idSelectTempl: null });
   }
-
-  handleTemplDelete = (record) => {
-    console.log(record);
-    this.setState({ selectedTempl: record });
+  handleOnDelete = (event) => {
+    const { id } = event.target.dataset;
+    this.setState({ idSelectTempl: id });
     this.showDeleteConfirm();
   };
   deleteTempl = () => {
-    this.props.calcDeleteRequest(this.props.me.id, this.state.selectedTempl.id);
+    this.props.calcDeleteRequest(this.props.me.id, this.state.idSelectTempl.id);
   }
   handleOnEdit = (event) => {
     const { id } = event.target.dataset;

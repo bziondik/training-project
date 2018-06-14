@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
-const User = mongoose.model('user');
 const Calculator = mongoose.model('calculator');
 
 module.exports = async function updateCalc(req, res, next) {
   try {
-    const userById = await User.findById({ id: req.params.userid });
-    if (userById) {
-      res.status(400);
-      return res.json({ message: 'User with such id does not exists' });
+    // request may do only user or admin
+    if (req.params.userid !== req.user.id && !req.user.isAdmin) {
+      res.status(403);
+      return res.json({ message: 'Please, login again' });
     }
-    const calcCurrent = await Calculator.findById(req.params.id);
+    const calcCurrent = await Calculator.findById(req.params.calcid);
     console.log('!!!->then findById calcCurrent=', calcCurrent);
 
     calcCurrent.name = req.body.name || calcCurrent.name;
@@ -19,9 +18,7 @@ module.exports = async function updateCalc(req, res, next) {
 
     const savedCalc = await calcCurrent.save();
     console.log('!!!->then save savedCalc=', savedCalc);
-    const calcs = await Calculator.find({ author: req.params.userid });
-    const calcsToFront = calcs.map(calc => calc.toJSON());
-    return res.status(200).json(calcsToFront);
+    return res.status(200).json(savedCalc.toJSON());
   } catch (error) {
     return next(error);
   }

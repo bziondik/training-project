@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Calculator from '../../Common/Calculator';
+import Calculator from '../../../Common/Calculator';
 
 class PreviewForm extends React.Component {
   handleSubmit = (values) => {
