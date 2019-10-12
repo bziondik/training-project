@@ -10,13 +10,14 @@ const config = require('../secret');
 const { ExtractJwt } = passportJWT;
 const JwtStrategy = passportJWT.Strategy;
 
-// локальная стратегия
+// local strategy
 passport.use(
   'loginUsers',
   new LocalStrategy((username, password, done) => {
     console.log('!!!LocalStrategy');
     console.log('username = ', username);
     console.log('password = ', password);
+    console.log('done = ', !!done);
     User.findOne({ username })
       .then((user) => { // eslint-disable-line
         console.log('!!!User.findOne then user=', user);
