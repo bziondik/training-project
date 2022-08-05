@@ -61,7 +61,7 @@
     "http-errors": "^1.6.3",
     "jsonwebtoken": "^8.2.1",
     "mongo-sanitize": "^1.0.0",
-    "mongoose": "^5.1.1",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.0",
     "nodemailer": "^4.6.5",
     "nodemailer-express-handlebars": "^3.0.0",
